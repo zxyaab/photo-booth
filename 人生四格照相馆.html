@@ -386,6 +386,15 @@
     #px-heart-2     { top: 30%; right: 7%; color: #9A6A7A; animation-duration: 15s; animation-delay: -3s; font-size: 13px; }
     #px-star-2      { top: 85%; right: 15%; color: #8A8A8A; animation-duration: 12s; animation-delay: -9s; font-size: 10px; }
     #px-diamond     { top: 45%; left: 12%; color: #8A6A8A; animation-duration: 17s; animation-delay: -5s; font-size: 10px; }
+    #px-heart-3     { top: 20%; right: 18%; color: #9A7A8A; animation-duration: 19s; animation-delay: -2s; font-size: 13px; }
+    #px-star-3      { top: 65%; left: 15%; color: #8A8AAA; animation-duration: 14s; animation-delay: -8s; font-size: 11px; }
+    #px-note        { top: 78%; right: 12%; color: #7A8A9A; animation-duration: 16s; animation-delay: -3s; font-size: 12px; }
+    #px-sparkle     { top: 10%; left: 25%; color: #9A8A7A; animation-duration: 15s; animation-delay: -6s; font-size: 10px; }
+    #px-moon        { top: 40%; right: 5%;  color: #8A9A8A; animation-duration: 20s; animation-delay: -1s; font-size: 14px; }
+    #px-flower      { top: 90%; left: 20%; color: #9A7A9A; animation-duration: 13s; animation-delay: -10s; font-size: 11px; }
+    #px-cat         { top: 50%; left: 3%;  color: #8A8A9A; animation-duration: 18s; animation-delay: -4s; font-size: 12px; }
+    #px-bolt        { top: 35%; right: 22%; color: #AAA888; animation-duration: 12s; animation-delay: -7s; font-size: 10px; }
+    #px-skull       { top: 70%; left: 18%; color: #9A8A8A; animation-duration: 21s; animation-delay: -9s; font-size: 11px; }
     @keyframes pixelFloat {
       0%   { transform: translateY(0) rotate(0deg); opacity: 0.3; }
       25%  { transform: translateY(-30px) rotate(5deg); opacity: 0.45; }
@@ -708,6 +717,18 @@
 
     /* ===== 第 5 步：窗口内部重构 ===== */
 
+    /* 标签页 */
+    .panel-tab {
+      padding: 3px 10px; font-size: 11px; cursor: pointer;
+      border: 2px solid transparent; border-bottom: none;
+      background: #D4D0C8; font-family: '宋体','SimSun',serif;
+      color: #000; margin-right: 1px;
+    }
+    .panel-tab:hover { background: #E8E4D8; }
+    .panel-tab.active { background: #ECE9D8; border-color: #ACA899 #ACA899 #ECE9D8 #ACA899; position: relative; top: 1px; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
     /* 素材区 */
     .section-title {
       font-size: 12px;
@@ -955,6 +976,49 @@
     .slider-row { display: flex; align-items: center; gap: 4px; margin: 3px 0; font-size: 11px; font-family: '宋体','SimSun',serif; }
     .slider-row input[type="range"] { width: 90px; height: 16px; }
 
+    /* ===== 相册缩略图 ===== */
+    .album-thumb {
+      width: 140px; height: 140px;
+      border: 2px solid;
+      border-color: #FFF #808080 #808080 #FFF;
+      background: #D4D0C8;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .album-thumb:hover { border-color: #316AC5 #204090 #204090 #316AC5; }
+    .album-thumb img { max-width: 100%; max-height: 100%; object-fit: contain; }
+    .album-thumb .thumb-info {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: rgba(0,0,0,0.6); color: #FFF;
+      font-size: 9px; padding: 2px 4px;
+      font-family: '宋体','SimSun',serif;
+      display: flex; justify-content: space-between;
+    }
+    .album-thumb .thumb-del {
+      position: absolute; top: 2px; right: 2px;
+      width: 16px; height: 16px; background: #C04040; color: #FFF;
+      border: 1px solid #801818; font-size: 10px; cursor: pointer;
+      display: none; align-items: center; justify-content: center;
+    }
+    .album-thumb:hover .thumb-del { display: flex; }
+
+    /* 全屏预览遮罩 */
+    #album-preview-overlay {
+      position: fixed; inset: 0; z-index: 99999;
+      background: rgba(0,0,0,0.7);
+      display: none; align-items: center; justify-content: center;
+    }
+    #album-preview-overlay img {
+      max-width: 90%; max-height: 85%;
+      border: 4px solid #FFF; box-shadow: 4px 4px 20px rgba(0,0,0,0.6);
+    }
+    #album-preview-overlay .preview-close {
+      position: absolute; top: 16px; right: 24px;
+      font-size: 32px; color: #FFF; cursor: pointer;
+    }
+
     /* ===== 扫雷单元格样式 ===== */
     .ms-cell {
       width: 24px; height: 24px;
@@ -1040,20 +1104,21 @@
   <div class="pixel-deco" id="px-heart-2">♥</div>
   <div class="pixel-deco" id="px-star-2">★</div>
   <div class="pixel-deco" id="px-diamond">◆</div>
+  <div class="pixel-deco" id="px-heart-3">♥</div>
+  <div class="pixel-deco" id="px-star-3">★</div>
+  <div class="pixel-deco" id="px-note">♪</div>
+  <div class="pixel-deco" id="px-sparkle">✧</div>
+  <div class="pixel-deco" id="px-moon">☾</div>
+  <div class="pixel-deco" id="px-flower">✿</div>
+  <div class="pixel-deco" id="px-cat">🐾</div>
+  <div class="pixel-deco" id="px-bolt">⚡</div>
+  <div class="pixel-deco" id="px-skull">💀</div>
 
   <!-- ===== 桌面图标层（第 3 步） ===== -->
   <div id="desktop-icons">
     <div class="desktop-icon" id="icon-photobooth" title="人生四格照相馆">
       <canvas class="icon-img icon-camera-canvas" width="48" height="48"></canvas>
       <div class="icon-label">photo<br>booth</div>
-    </div>
-    <div class="desktop-icon" id="icon-minesweeper" title="扫雷">
-      <div class="icon-img">💣</div>
-      <div class="icon-label">扫雷</div>
-    </div>
-    <div class="desktop-icon" id="icon-solitaire" title="纸牌">
-      <div class="icon-img">🃏</div>
-      <div class="icon-label">纸牌</div>
     </div>
     <div class="desktop-icon" id="icon-my-pc" title="我的电脑">
       <div class="icon-img">💻</div>
@@ -1140,7 +1205,12 @@
       <button class="cam-mode-btn active" id="cam-mode-single">单张</button>
       <button class="cam-mode-btn" id="cam-mode-burst">连拍4张</button>
       <button id="cam-snap-btn" title="拍照">●</button>
-      <button class="cam-mode-btn" id="cam-help-btn" title="帮助" style="margin-left:8px;">❓ 帮助</button>
+      <button class="cam-mode-btn" id="cam-mirror-btn" title="镜像翻转">🪞 翻转</button>
+      <div class="slider-row" style="margin:0 4px;color:#000;gap:2px;">
+        <span style="font-size:10px;">亮度</span>
+        <input type="range" id="cam-brightness" min="50" max="150" value="100" style="width:60px;">
+      </div>
+      <button class="cam-mode-btn" id="cam-help-btn" title="帮助" style="margin-left:4px;">❓ 帮助</button>
     </div>
   </div>
 
@@ -1216,6 +1286,35 @@
     </div>
   </div>
 
+  <!-- ===== 相册查看器窗口 ===== -->
+  <div class="xp-window hidden" id="album-window" style="top: 40px; left: 180px; width: 680px; height: 500px; min-width: 500px; min-height: 380px;">
+    <div class="win-title-bar" id="album-title-bar">
+      <span class="win-icon">🖼</span>
+      <span class="win-title">📁 图片收藏 — 本地相册</span>
+      <div class="win-controls">
+        <button class="win-ctrl-btn win-ctrl-close" id="album-close-btn" title="关闭">✕</button>
+      </div>
+    </div>
+    <div class="win-menu-bar">
+      <span class="win-menu-item" id="album-folder-all">📁 全部作品</span>
+      <span class="win-menu-item" id="album-folder-4grid">🪟 四格成品</span>
+      <span class="win-menu-item" id="album-folder-polaroid">📸 拍立得</span>
+      <span class="win-menu-item" id="album-refresh-btn">🔄 刷新</span>
+      <span class="win-menu-item" id="album-delete-all" style="margin-left:auto;color:#C00;">🗑 清空</span>
+    </div>
+    <div class="win-content" style="overflow-y:auto;padding:8px;background:#FFF;">
+      <div id="album-grid" style="display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start;"></div>
+      <div id="album-empty" style="text-align:center;padding:60px;color:#808080;font-family:'宋体','SimSun',serif;">
+        <div style="font-size:48px;">📂</div>
+        <p>相册是空的</p>
+        <p style="font-size:10px;">制作四格照或拍立得后，点击 💾 保存到相册</p>
+      </div>
+    </div>
+    <div class="win-status-bar">
+      <span id="album-status">📁 就绪</span>
+    </div>
+  </div>
+
   <!-- ===== 窗口层（第 4 步） ===== -->
   <div class="xp-window hidden" id="main-window" style="top: 50px; left: 120px;">
     <!-- 拖拽调整把手 -->
@@ -1266,6 +1365,13 @@
       <div class="content-columns">
         <!-- 左侧面板 -->
         <div class="content-left">
+          <!-- 标签页切换 -->
+          <div style="display:flex;gap:0;margin-bottom:4px;border-bottom:1px solid #ACA899;">
+            <button class="panel-tab active" data-tab="template">🪟 模板</button>
+            <button class="panel-tab" data-tab="filter">🎨 滤镜</button>
+            <button class="panel-tab" data-tab="edit">✂️ 修图</button>
+            <button class="panel-tab" data-tab="sticker">🌟 贴纸</button>
+          </div>
           <!-- 素材区 -->
           <div>
             <div class="section-title">📷 素材区（点击或拖拽导入）</div>
@@ -1286,6 +1392,7 @@
           <!-- 模板选择区 -->
           <div class="template-section">
             <div class="section-title">🪟 四格模板</div>
+            <div class="filter-group-label" style="font-size:10px;color:#808080;">基础款</div>
             <div class="template-grid" id="template-grid">
               <div class="template-card selected" data-template="grid22">
                 <div class="tc-preview grid22"><div class="tc-cell"></div><div class="tc-cell"></div><div class="tc-cell"></div><div class="tc-cell"></div></div>
@@ -1295,12 +1402,24 @@
                 <div class="tc-preview grid14"><div class="tc-cell"></div><div class="tc-cell"></div><div class="tc-cell"></div><div class="tc-cell"></div></div>
                 横向长条
               </div>
-              <div class="template-card" data-template="polaroid" style="width:auto;padding:3px 6px;">
-                <div class="tc-preview" style="display:flex;flex-direction:column;align-items:center;gap:1px;width:52px;height:56px;">
-                  <div style="width:38px;height:30px;background:#C0C0C0;border:1px solid #999;"></div>
-                  <div style="width:38px;height:14px;background:#FFF;border:1px solid #DDD;"></div>
-                </div>
-                拍立得
+            </div>
+            <div class="filter-group-label" style="font-size:10px;color:#808080;">创意款</div>
+            <div class="template-grid" id="template-grid-creative">
+              <div class="template-card" data-template="offset">
+                <div class="tc-preview grid22" style="position:relative;"><div class="tc-cell" style="position:absolute;top:2px;left:2px;width:22px;height:22px;"></div><div class="tc-cell" style="position:absolute;top:8px;left:24px;width:22px;height:22px;"></div><div class="tc-cell" style="position:absolute;top:24px;left:6px;width:22px;height:22px;"></div><div class="tc-cell" style="position:absolute;top:28px;left:28px;width:22px;height:22px;"></div></div>
+                错位四格
+              </div>
+              <div class="template-card" data-template="heart">
+                <div class="tc-preview grid22"><div class="tc-cell" style="border-radius:40% 40% 10% 10%;"></div><div class="tc-cell" style="border-radius:40% 40% 10% 10%;"></div><div class="tc-cell" style="border-radius:40% 40% 10% 10%;"></div><div class="tc-cell" style="border-radius:40% 40% 10% 10%;"></div></div>
+                爱心圆角
+              </div>
+              <div class="template-card" data-template="wave">
+                <div class="tc-preview grid22"><div class="tc-cell" style="border-radius:20% 60% 30% 50%;"></div><div class="tc-cell" style="border-radius:50% 30% 60% 20%;"></div><div class="tc-cell" style="border-radius:30% 50% 20% 60%;"></div><div class="tc-cell" style="border-radius:60% 20% 50% 30%;"></div></div>
+                波浪花边
+              </div>
+              <div class="template-card" data-template="pixelgrid">
+                <div class="tc-preview grid22"><div class="tc-cell" style="border:2px dotted #666;"></div><div class="tc-cell" style="border:2px dotted #666;"></div><div class="tc-cell" style="border:2px dotted #666;"></div><div class="tc-cell" style="border:2px dotted #666;"></div></div>
+                像素描边
               </div>
             </div>
           </div>
@@ -1311,8 +1430,64 @@
               <span class="border-opt selected" data-border="film">🎞 黑胶片</span>
               <span class="border-opt" data-border="cream">🥛 奶油白</span>
               <span class="border-opt" data-border="xp">🪟 XP像素</span>
+              <span class="border-opt" data-border="silver">💿 银质镭射</span>
+              <span class="border-opt" data-border="floral">🌸 碎花花边</span>
             </div>
           </div>
+          <!-- 拍立得模板 -->
+          <div class="template-section">
+            <div class="section-title">📸 拍立得模板</div>
+            <div class="template-grid" id="template-grid-polaroid">
+              <div class="template-card" data-template="polaroid">
+                <div class="tc-preview" style="display:flex;flex-direction:column;align-items:center;gap:0;width:44px;height:52px;background:#FFF;padding:2px;">
+                  <div style="width:38px;height:28px;background:#C0C0C0;border:1px solid #999;"></div>
+                  <div style="width:38px;height:12px;background:#FFF;"></div>
+                </div>
+                经典白边
+              </div>
+              <div class="template-card" data-template="polaroid-brown">
+                <div class="tc-preview" style="display:flex;flex-direction:column;align-items:center;gap:0;width:44px;height:52px;background:#D4C8B0;padding:3px;">
+                  <div style="width:36px;height:26px;background:#C0C0C0;border:1px solid #999;"></div>
+                  <div style="width:36px;height:14px;background:#E8DCC8;"></div>
+                </div>
+                复古棕调
+              </div>
+              <div class="template-card" data-template="polaroid-rainbow">
+                <div class="tc-preview" style="display:flex;flex-direction:column;align-items:center;gap:0;width:44px;height:52px;background:linear-gradient(135deg,#A855F7,#EC4899,#2DD4BF);padding:3px;">
+                  <div style="width:36px;height:26px;background:#C0C0C0;border:1px solid #999;"></div>
+                  <div style="width:36px;height:14px;background:rgba(255,255,255,0.6);"></div>
+                </div>
+                彩虹镭射
+              </div>
+              <div class="template-card" data-template="polaroid-mini">
+                <div class="tc-preview" style="display:flex;flex-direction:column;align-items:center;gap:1px;width:34px;height:48px;background:#FFF;padding:2px;margin:0 auto;">
+                  <div style="width:28px;height:22px;background:#C0C0C0;border:1px solid #999;"></div>
+                  <div style="width:28px;height:16px;background:#FFF;"></div>
+                </div>
+                迷你证件
+              </div>
+            </div>
+            <!-- 拍立得文字输入 -->
+            <div style="display:flex;gap:4px;align-items:center;margin-top:4px;">
+              <span style="font-size:10px;">文字：</span>
+              <input type="text" id="polaroid-text" placeholder="手写标语..." style="flex:1;height:20px;border:2px inset #ACA899;font-size:10px;font-family:'宋体','SimSun',serif;padding:0 4px;" />
+              <select id="polaroid-text-color" style="height:20px;font-size:10px;border:2px inset #ACA899;font-family:'宋体','SimSun',serif;">
+                <option value="#000">黑</option><option value="#C00">红</option><option value="#06C">蓝</option><option value="#C0C">紫</option><option value="#0C6">绿</option><option value="#F80">橙</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- 模板附加效果 -->
+          <div class="template-section">
+            <div class="section-title">✨ 附加效果</div>
+            <div class="filter-options" id="template-fx">
+              <button class="filter-btn" data-tfx="none" style="font-size:9px;">🚫 无</button>
+              <button class="filter-btn" data-tfx="vignette" style="font-size:9px;">🌑 暗角</button>
+              <button class="filter-btn" data-tfx="scratch" style="font-size:9px;">📜 磨损</button>
+              <button class="filter-btn" data-tfx="leak" style="font-size:9px;">💡 漏光</button>
+            </div>
+          </div>
+
           <!-- 参数调节 -->
           <div class="template-section">
             <div class="section-title">⚙ 参数调节</div>
@@ -1334,13 +1509,42 @@
             <div class="slider-row"><span>对比度</span><input type="range" id="edit-contrast" min="-50" max="50" value="0"><span id="contrast-val">0</span></div>
             <div class="slider-row"><span>饱和度</span><input type="range" id="edit-saturation" min="-50" max="50" value="0"><span id="saturation-val">0</span></div>
             <div class="slider-row"><span>色温</span><input type="range" id="edit-warmth" min="-30" max="30" value="0"><span id="warmth-val">0</span></div>
+            <div class="slider-row"><span>锐化</span><input type="range" id="edit-sharpen" min="0" max="30" value="0"><span id="sharpen-val">0</span></div>
+            <div class="slider-row"><span>模糊</span><input type="range" id="edit-blur" min="0" max="20" value="0"><span id="blur-val">0</span></div>
             <button class="xp-btn" id="edit-reset-btn" style="margin-top:4px;font-size:10px;min-width:60px;height:20px;">重置调色</button>
+            <div style="display:flex;gap:3px;margin-top:4px;">
+              <button class="xp-btn" id="edit-rotate-btn" style="font-size:10px;min-width:36px;height:20px;">↻90°</button>
+              <button class="xp-btn" id="edit-flip-h-btn" style="font-size:10px;min-width:36px;height:20px;">⇔翻转</button>
+              <button class="xp-btn" id="edit-flip-v-btn" style="font-size:10px;min-width:36px;height:20px;">⇕镜像</button>
+            </div>
+          </div>
+
+          <!-- 涂鸦笔刷 -->
+          <div class="filter-section">
+            <div class="section-title">🖌 涂鸦笔刷</div>
+            <div style="display:flex;gap:3px;align-items:center;margin-bottom:3px;">
+              <button class="xp-btn brush-btn active" data-brush="marker" style="font-size:9px;min-width:40px;height:20px;">🖍荧光</button>
+              <button class="xp-btn brush-btn" data-brush="chalk" style="font-size:9px;min-width:40px;height:20px;">📝粉笔</button>
+              <input type="color" id="brush-color" value="#FF00FF" style="width:24px;height:20px;border:1px solid #808080;padding:0;" />
+              <button class="xp-btn" id="brush-clear-btn" style="font-size:9px;min-width:36px;height:20px;">清除</button>
+            </div>
+          </div>
+
+          <!-- 美颜 -->
+          <div class="filter-section">
+            <div class="section-title">💆 复古美颜</div>
+            <div class="filter-options">
+              <button class="filter-btn beauty-btn" data-beauty="smooth">✨ 磨皮</button>
+              <button class="filter-btn beauty-btn" data-beauty="brighten">💡 提亮</button>
+              <button class="filter-btn beauty-btn" data-beauty="blush">😊 腮红</button>
+              <button class="filter-btn beauty-btn" data-beauty="none" style="border-color:#6BAF5A;">🚫 还原</button>
+            </div>
           </div>
 
           <!-- 贴纸库 -->
           <div class="filter-section">
             <div class="section-title">🌟 像素贴纸 <span style="font-weight:normal;font-size:10px;">(点击贴纸→点击预览区放置)</span></div>
-            <div class="filter-options" id="sticker-palette" style="gap:3px;">
+            <div class="filter-options" id="sticker-palette" style="gap:2px;">
               <button class="sticker-btn" data-emoji="❤️">❤️</button>
               <button class="sticker-btn" data-emoji="⭐">⭐</button>
               <button class="sticker-btn" data-emoji="🦋">🦋</button>
@@ -1349,10 +1553,17 @@
               <button class="sticker-btn" data-emoji="🌸">🌸</button>
               <button class="sticker-btn" data-emoji="🎀">🎀</button>
               <button class="sticker-btn" data-emoji="💎">💎</button>
-              <button class="sticker-btn" data-emoji="🍀">🍀</button>
               <button class="sticker-btn" data-emoji="💿">💿</button>
+              <button class="sticker-btn" data-emoji="🍀">🍀</button>
               <button class="sticker-btn" data-emoji="📷">📷</button>
               <button class="sticker-btn" data-emoji="🪟">🪟</button>
+              <button class="sticker-btn xp-icon" data-emoji="🗑️">🗑️</button>
+              <button class="sticker-btn xp-icon" data-emoji="💻">💻</button>
+              <button class="sticker-btn xp-icon" data-emoji="🖥">🖥</button>
+              <button class="sticker-btn xp-icon" data-emoji="📁">📁</button>
+              <button class="sticker-btn art-text" data-emoji="💜LOVE">💜</button>
+              <button class="sticker-btn art-text" data-emoji="💿Y2K">💿</button>
+              <button class="sticker-btn art-text" data-emoji="✨HAPPY">✨</button>
             </div>
             <button class="xp-btn" id="sticker-clear-btn" style="margin-top:4px;font-size:10px;min-width:60px;height:20px;">清除贴纸</button>
           </div>
@@ -1411,6 +1622,23 @@
     <!-- 状态栏 -->
     <div class="win-status-bar">
       <span>📷 素材: 0 张</span>
+      <span id="export-options-inline" style="display:flex;align-items:center;gap:4px;margin:0 8px;">
+        <select id="export-size-select" style="height:18px;font-size:9px;border:1px inset #ACA899;font-family:'宋体','SimSun',serif;">
+          <option value="original">📐 原始尺寸</option>
+          <option value="print">🖨 打印尺寸(4:3)</option>
+          <option value="social">📱 朋友圈(1:1)</option>
+          <option value="wallpaper">🖥 桌面壁纸(16:9)</option>
+          <option value="avatar">👤 头像(1:1)</option>
+        </select>
+        <select id="export-quality-select" style="height:18px;font-size:9px;border:1px inset #ACA899;font-family:'宋体','SimSun',serif;">
+          <option value="hd">✨ 高清原图</option>
+          <option value="retro">👾 复古低像素</option>
+        </select>
+        <label style="font-size:9px;font-family:'宋体','SimSun',serif;display:flex;align-items:center;gap:2px;">
+          <input type="checkbox" id="export-watermark" /> 水印
+        </label>
+        <button class="xp-btn" id="print-btn" style="font-size:9px;min-width:36px;height:18px;">🖨 打印</button>
+      </span>
       <span style="margin-left:auto;">🟢 就绪</span>
     </div>
   </div>
@@ -1433,6 +1661,62 @@
   <script>
     // ===== XP复古人生四格照相馆 — 主脚本 =====
     'use strict';
+
+    // ===== 全局状态管理层 =====
+    var AppState = (function() {
+      var state = {
+        // 模板
+        template: 'grid22',
+        border: 'film',
+        gap: 6,
+        radius: 4,
+        // 滤镜
+        filter: 'none',
+        filterStrength: 70,
+        // 修图
+        brightness: 0, contrast: 0, saturation: 0, warmth: 0,
+        sharpen: 0, blur: 0,
+        rotateAngle: 0, flipH: false, flipV: false,
+        // 美颜
+        beauty: 'none',
+        // 模板特效
+        templateFX: 'none',
+        // 贴纸
+        stickers: [],
+        // 涂鸦
+        brushStrokes: [],
+        // 素材
+        assets: [null, null, null, null],
+        assetCount: 0,
+        // 草稿
+        draftSaved: false,
+        // 路由
+        route: 'create'
+      };
+      var listeners = [];
+
+      function get(key) { return state[key]; }
+      function set(key, value) {
+        var old = state[key];
+        state[key] = value;
+        if (old !== value) notify(key, value, old);
+      }
+      function getAll() { return state; }
+      function onChange(fn) { listeners.push(fn); }
+      function notify(key, newVal, oldVal) {
+        listeners.forEach(function(fn) { try { fn(key, newVal, oldVal); } catch(e) {} });
+      }
+
+      // 订阅预览更新
+      onChange(function(key) {
+        var previewKeys = ['template','border','gap','radius','filter','filterStrength','brightness','contrast','saturation','warmth','sharpen','blur','rotateAngle','flipH','flipV','beauty','templateFX','stickers','brushStrokes'];
+        if (previewKeys.indexOf(key) >= 0) {
+          if (typeof TemplateEngine !== 'undefined') TemplateEngine.updatePreview();
+        }
+      });
+
+      return { get: get, set: set, getAll: getAll, onChange: onChange };
+    })();
 
     // ===== 写实壁纸绘制（Canvas） =====
     (function() {
@@ -1618,6 +1902,143 @@
     updateClock();
     setInterval(updateClock, 30000);
 
+    // ===== 草稿会话管理 =====
+    var DraftSession = (function() {
+      var DRAFT_KEY = 'photobooth_draft';
+      var autoSaveTimer = null;
+
+      function save() {
+        try {
+          var assets = AppState.get('assets');
+          var draft = {
+            assets: assets.map(function(a) { return a ? { src: a.src, name: a.name || '' } : null; }),
+            template: AppState.get('template'),
+            border: AppState.get('border'),
+            gap: AppState.get('gap'),
+            radius: AppState.get('radius'),
+            filter: AppState.get('filter'),
+            filterStrength: AppState.get('filterStrength'),
+            brightness: AppState.get('brightness'),
+            contrast: AppState.get('contrast'),
+            saturation: AppState.get('saturation'),
+            warmth: AppState.get('warmth'),
+            stickers: AppState.get('stickers'),
+            savedAt: Date.now()
+          };
+          localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+          AppState.set('draftSaved', true);
+        } catch(e) {}
+      }
+
+      function load() {
+        try {
+          var raw = localStorage.getItem(DRAFT_KEY);
+          if (!raw) return null;
+          return JSON.parse(raw);
+        } catch(e) { return null; }
+      }
+
+      function restore(draft) {
+        if (!draft || !draft.assets) return false;
+        // 恢复素材
+        var restored = 0;
+        draft.assets.forEach(function(a, i) {
+          if (a && a.src) {
+            var img = new Image();
+            img.onload = function() {
+              if (typeof AssetManager !== 'undefined') AssetManager.addImage(img, i);
+            };
+            img.src = a.src;
+            restored++;
+          }
+        });
+        // 恢复参数
+        if (draft.template) AppState.set('template', draft.template);
+        if (draft.border) AppState.set('border', draft.border);
+        if (draft.gap !== undefined) AppState.set('gap', draft.gap);
+        if (draft.radius !== undefined) AppState.set('radius', draft.radius);
+        if (draft.filter) {
+          // 更新 FilterEngine 的当前滤镜
+          AppState.set('filter', draft.filter);
+        }
+        if (draft.filterStrength) AppState.set('filterStrength', draft.filterStrength);
+        if (draft.stickers) AppState.set('stickers', draft.stickers);
+        WindowManager.setStatus('📝 已恢复未完成的作品');
+        return true;
+      }
+
+      function clear() {
+        localStorage.removeItem(DRAFT_KEY);
+        AppState.set('draftSaved', false);
+      }
+
+      // 自动保存：每 10 秒检查一次
+      setInterval(function() {
+        var count = AppState.get('assetCount');
+        if (count > 0) save();
+      }, 10000);
+
+      // 页面离开时保存
+      window.addEventListener('beforeunload', function() {
+        if (AppState.get('assetCount') > 0) save();
+      });
+
+      // 启动时检测草稿
+      var existing = load();
+      if (existing && existing.savedAt) {
+        var age = Date.now() - existing.savedAt;
+        if (age < 24 * 60 * 60 * 1000) {
+          setTimeout(function() {
+            if (confirm('📝 检测到未完成的作品（' + new Date(existing.savedAt).toLocaleString() + '）\n\n是否恢复继续编辑？')) {
+              restore(existing);
+            } else {
+              clear();
+            }
+          }, 800);
+        }
+      }
+
+      return { save: save, load: load, restore: restore, clear: clear };
+    })();
+
+    // 开始按钮菜单
+    (function() {
+      var startBtn = document.getElementById('start-btn');
+      if (!startBtn) return;
+      // 创建弹出菜单
+      var menu = document.createElement('div');
+      menu.id = 'start-menu';
+      menu.style.cssText = 'position:fixed;bottom:34px;left:2px;z-index:99999;background:#ECE9D8;border:2px solid #0054E3;padding:2px;display:none;min-width:160px;box-shadow:2px 2px 4px rgba(0,0,0,0.4);';
+      menu.innerHTML = '<div style="padding:4px 8px;font-size:11px;font-family:\'宋体\',\'SimSun\',serif;cursor:pointer;" data-action="photobooth">📸 photo booth</div>' +
+        '<div style="padding:4px 8px;font-size:11px;font-family:\'宋体\',\'SimSun\',serif;cursor:pointer;" data-action="minesweeper">💣 扫雷</div>' +
+        '<div style="padding:4px 8px;font-size:11px;font-family:\'宋体\',\'SimSun\',serif;cursor:pointer;" data-action="solitaire">🃏 纸牌</div>' +
+        '<div style="border-top:1px solid #ACA899;margin:2px 0;"></div>' +
+        '<div style="padding:4px 8px;font-size:11px;font-family:\'宋体\',\'SimSun\',serif;cursor:pointer;" data-action="about">❓ 关于</div>';
+      document.body.appendChild(menu);
+
+      startBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        menu.style.display = (menu.style.display === 'none' || !menu.style.display) ? 'block' : 'none';
+      });
+      document.addEventListener('click', function() { menu.style.display = 'none'; });
+      menu.addEventListener('click', function(e) {
+        var action = e.target.getAttribute('data-action');
+        if (action === 'photobooth') {
+          var mw = document.getElementById('main-window');
+          if (mw) { mw.classList.remove('hidden','minimized'); WindowManager.bringToTop(); }
+          if (typeof CameraModule !== 'undefined') CameraModule.open();
+        } else if (action === 'minesweeper' && typeof MinesweeperGame !== 'undefined') {
+          MinesweeperGame.open();
+        } else if (action === 'solitaire' && typeof SolitaireGame !== 'undefined') {
+          SolitaireGame.open();
+        } else if (action === 'about') {
+          alert('📸 XP复古人生四格照相馆\n\nVersion 1.0\n纯前端 | 零依赖 | 本地运行\n\nMade with ❤️ and ☕');
+        }
+        menu.style.display = 'none';
+        e.stopPropagation();
+      });
+    })();
+
     console.log('✅ 第 1 步完成：XP 蓝天白云草地壁纸');
     console.log('✅ 第 2 步完成：XP 任务栏（开始按钮 + 状态区 + 时钟）');
     console.log('⏳ 执行第 3 步：桌面图标 + 回收站彩蛋...');
@@ -1787,6 +2208,42 @@
       });
 
       console.log('✅ 第 3 步完成：桌面图标 + 回收站趣味弹窗 + 快捷启动');
+
+    // 标签页切换
+    (function() {
+      var tabs = document.querySelectorAll('.panel-tab');
+      tabs.forEach(function(tab) {
+        tab.addEventListener('click', function() {
+          var tn = this.getAttribute('data-tab');
+          tabs.forEach(function(t) { t.classList.remove('active'); });
+          this.classList.add('active');
+          document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
+          var panel = document.getElementById('tab-' + tn);
+          if (panel) panel.classList.add('active');
+        });
+      });
+    })();
+
+    // ===== Hash 路由 =====
+    (function() {
+      function handleRoute() {
+        var hash = window.location.hash || '#create';
+        AppState.set('route', hash.replace('#', ''));
+        // 路由逻辑：创作页 vs 相册页
+        if (hash === '#album') {
+          if (window.AlbumViewer) window.AlbumViewer.open();
+        }
+      }
+      window.addEventListener('hashchange', handleRoute);
+      handleRoute();
+      // 初始路由
+      if (!window.location.hash) {
+        window.location.hash = '#create';
+      }
+    })();
+
+    console.log('✅ Hash 路由：创作页/相册页');
+    console.log('✅ 第 3 步完成：桌面图标 + 回收站趣味弹窗 + 快捷启动');
 
     // ===== 桌面数码小狗互动（升级版） =====
     (function() {
@@ -2098,20 +2555,24 @@
     })();
 
     // 点击桌面空白区域恢复窗口（如果最小化）
-    document.getElementById('desktop').addEventListener('click', function() {
-      var win = document.getElementById('main-window');
-      if (win.classList.contains('minimized')) {
-        win.classList.remove('minimized');
-        WindowManager.bringToTop();
-      }
-    });
+    var wallpaperCanvas = document.getElementById('wallpaper-canvas');
+    if (wallpaperCanvas) {
+      wallpaperCanvas.addEventListener('click', function() {
+        var win = document.getElementById('main-window');
+        if (win && win.classList.contains('minimized')) {
+          win.classList.remove('minimized');
+          WindowManager.bringToTop();
+        }
+      });
+    }
 
     console.log('✅ 第 4 步完成：可拖拽、缩放、最小化/最大化/关闭的 XP 主窗口');
     console.log('⏳ 执行第 5 步：本地上传图片...');
 
-    // ===== 第 5 步：素材管理（本地上传 + 拖拽导入） =====
+    // ===== 第 5 步：素材管理（四格独立对象 + 拖拽导入） =====
     var AssetManager = (function() {
-      var assets = [null, null, null, null]; // 4个素材位
+      var assets = [null, null, null, null]; // 四个独立 Image 对象
+      AppState.set('assets', assets);
       var slotElements = [];
       var previewCanvas = document.getElementById('preview-canvas');
       var previewCtx = previewCanvas.getContext('2d');
@@ -2127,6 +2588,9 @@
       function updateStatus() {
         var count = assets.filter(function(a) { return a !== null; }).length;
         if (statusBar) statusBar.textContent = '📷 素材: ' + count + ' / 4 张';
+        AppState.set('assets', assets);
+        AppState.set('assetCount', count);
+        DraftSession.save(); // 自动草稿保存
       }
 
       function loadImage(file, slotIndex) {
@@ -2308,6 +2772,7 @@
       var burstMode = false;
       var busy = false;        // 正在倒计时/连拍中
       var countdownTimer = null;
+      var mirrorEnabled = true; // 镜像翻转（默认开启，前置摄像头镜像）
 
       // 快门音效（Web Audio API 生成短促白噪声咔嚓声）
       function playShutterSound() {
@@ -2357,9 +2822,11 @@
         canvas.width = vw;
         canvas.height = vh;
         var ctx = canvas.getContext('2d');
-        // 如果视频是镜像的（前置摄像头），水平翻转
-        ctx.translate(vw, 0);
-        ctx.scale(-1, 1);
+        // 镜像翻转（默认开启，模拟照镜子）
+        if (mirrorEnabled) {
+          ctx.translate(vw, 0);
+          ctx.scale(-1, 1);
+        }
         ctx.drawImage(camVideo, 0, 0, vw, vh);
         ctx.setTransform(1, 0, 0, 1, 0, 0); // 恢复
 
@@ -2571,6 +3038,24 @@
         camSnapBtn.style.boxShadow = '0 2px 4px rgba(0,0,0,0.4)';
       });
 
+      // 镜像翻转按钮
+      var mirrorBtn = document.getElementById('cam-mirror-btn');
+      if (mirrorBtn) {
+        mirrorBtn.addEventListener('click', function() {
+          mirrorEnabled = !mirrorEnabled;
+          mirrorBtn.classList.toggle('active', mirrorEnabled);
+          mirrorBtn.textContent = mirrorEnabled ? '🪞 翻转:开' : '🪞 翻转:关';
+        });
+      }
+
+      // 相机亮度调节
+      var brightSlider = document.getElementById('cam-brightness');
+      if (brightSlider) {
+        brightSlider.addEventListener('input', function() {
+          camVideo.style.filter = 'brightness(' + (brightSlider.value / 100) + ')';
+        });
+      }
+
       // 帮助按钮
       var helpBtn = document.getElementById('cam-help-btn');
       var helpDlg = document.getElementById('cam-help-dialog');
@@ -2626,18 +3111,21 @@
 
       // 输出尺寸
       function getOutputSize() {
-        if (currentTemplate === 'grid22') return { w: 1600, h: 1600 };
-        if (currentTemplate === 'polaroid') return { w: 1200, h: 1500 };
+        if (currentTemplate === 'grid22' || currentTemplate === 'offset' || currentTemplate === 'heart' || currentTemplate === 'wave' || currentTemplate === 'pixelgrid') return { w: 1600, h: 1600 };
+        if (currentTemplate === 'polaroid' || currentTemplate === 'polaroid-brown' || currentTemplate === 'polaroid-rainbow') return { w: 1200, h: 1500 };
+        if (currentTemplate === 'polaroid-mini') return { w: 900, h: 1200 };
         return { w: 2400, h: 600 };
       }
 
       // 获取边框颜色和宽度
       function getBorderStyle() {
         switch (currentBorder) {
-          case 'film':  return { color: '#1A1A1A', width: 10 };
-          case 'cream': return { color: '#FAFAF0', width: 14 };
-          case 'xp':    return { color: '#ECE9D8', width: 8 };
-          default:      return { color: '#1A1A1A', width: 10 };
+          case 'film':   return { color: '#1A1A1A', width: 10, type: 'solid' };
+          case 'cream':  return { color: '#FAFAF0', width: 14, type: 'solid' };
+          case 'xp':     return { color: '#ECE9D8', width: 8, type: 'pixel' };
+          case 'silver': return { color: '#C0C0C0', width: 12, type: 'metallic' };
+          case 'floral': return { color: '#F0E0F0', width: 14, type: 'floral' };
+          default:       return { color: '#1A1A1A', width: 10, type: 'solid' };
         }
       }
 
@@ -2660,16 +3148,36 @@
               });
             }
           }
-        } else if (currentTemplate === 'polaroid') {
-          // 拍立得：单张大图 + 底部留白
-          var margin = 120;
-          var bottomMargin = 280;
-          rects.push({
-            x: margin,
-            y: margin,
-            w: size.w - margin * 2,
-            h: size.h - margin - bottomMargin
-          });
+        } else if (currentTemplate === 'offset') {
+          // 错位不规则四格：每格随机偏移
+          var cw = (size.w - gap * 3) / 2;
+          var ch = (size.h - gap * 3) / 2;
+          var offsets = [[0,0],[12,8],[-6,10],[8,-6]];
+          for (var row = 0; row < 2; row++) {
+            for (var col = 0; col < 2; col++) {
+              var idx = row * 2 + col;
+              rects.push({
+                x: gap + col * (cw + gap) + offsets[idx][0],
+                y: gap + row * (ch + gap) + offsets[idx][1],
+                w: cw, h: ch
+              });
+            }
+          }
+        } else if (currentTemplate === 'heart' || currentTemplate === 'wave' || currentTemplate === 'pixelgrid') {
+          // 爱心/波浪/像素：标准2×2布局，在 composite 中用不同裁剪
+          var cw = (size.w - gap * 3) / 2;
+          var ch = (size.h - gap * 3) / 2;
+          for (var row = 0; row < 2; row++) {
+            for (var col = 0; col < 2; col++) {
+              rects.push({ x: gap + col * (cw + gap), y: gap + row * (ch + gap), w: cw, h: ch });
+            }
+          }
+        } else if (currentTemplate === 'polaroid' || currentTemplate === 'polaroid-brown' || currentTemplate === 'polaroid-rainbow') {
+          var margin = 120, bottomMargin = 280;
+          rects.push({ x: margin, y: margin, w: size.w - margin * 2, h: size.h - margin - bottomMargin });
+        } else if (currentTemplate === 'polaroid-mini') {
+          var margin = 80, bottomMargin = 260;
+          rects.push({ x: margin, y: margin, w: size.w - margin * 2, h: size.h - margin - bottomMargin });
         } else {
           // grid14: 横向 1 行 4 列
           var cellW = (size.w - gap * 5) / 4;
@@ -2702,6 +3210,51 @@
         ctx.closePath();
       }
 
+      // 模板附加效果
+      var currentTFX = 'none';
+      function applyTemplateFX(ctx, canvas) {
+        var w = canvas.width, h = canvas.height;
+        if (currentTFX === 'none') return canvas;
+
+        if (currentTFX === 'vignette') {
+          var imageData = ctx.getImageData(0, 0, w, h);
+          var pixels = imageData.data, cx = w/2, cy = h/2, md = Math.sqrt(cx*cx+cy*cy);
+          for (var i = 0; i < pixels.length; i += 4) {
+            var x = (i/4) % w, y = Math.floor((i/4)/w);
+            var dist = Math.sqrt((x-cx)*(x-cx)+(y-cy)*(y-cy)) / md;
+            var v = 1 - Math.pow(Math.max(0, dist - 0.15) / 0.85, 2) * 0.6;
+            pixels[i] *= v; pixels[i+1] *= v; pixels[i+2] *= v;
+          }
+          ctx.putImageData(imageData, 0, 0);
+        } else if (currentTFX === 'scratch') {
+          // 胶片磨损：随机细线划痕
+          ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+          ctx.lineWidth = 1;
+          for (var s = 0; s < 30; s++) {
+            ctx.beginPath();
+            var sx = Math.random() * w, sy = Math.random() * h;
+            ctx.moveTo(sx, sy); ctx.lineTo(sx + Math.random() * 80 - 40, sy + Math.random() * 3 - 1);
+            ctx.stroke();
+          }
+          ctx.strokeStyle = 'rgba(0,0,0,0.06)';
+          for (s = 0; s < 15; s++) {
+            ctx.beginPath();
+            ctx.moveTo(Math.random()*w, Math.random()*h);
+            ctx.lineTo(Math.random()*w, Math.random()*h); ctx.stroke();
+          }
+        } else if (currentTFX === 'leak') {
+          // 漏光光斑：随机彩色光晕
+          for (var l = 0; l < 3; l++) {
+            var lx = Math.random() * w, ly = Math.random() * h * 0.5;
+            var grad = ctx.createRadialGradient(lx, ly, 0, lx, ly, w * 0.15);
+            var colors = ['rgba(255,200,100,0.08)','rgba(255,150,200,0.06)','rgba(200,220,255,0.07)'];
+            grad.addColorStop(0, colors[l]); grad.addColorStop(1, 'rgba(0,0,0,0)');
+            ctx.fillStyle = grad; ctx.fillRect(0, 0, w, h);
+          }
+        }
+        return canvas;
+      }
+
       // 主合成函数
       function composite() {
         var size = getOutputSize();
@@ -2716,8 +3269,25 @@
         var offCtx = offCanvas.getContext('2d');
 
         // 背景色（边框颜色 → 填充间隙和边距）
-        offCtx.fillStyle = border.color;
-        offCtx.fillRect(0, 0, size.w, size.h);
+        // 特殊边框处理
+        if (currentBorder === 'silver') {
+          var grad = offCtx.createLinearGradient(0, 0, size.w, size.h);
+          grad.addColorStop(0, '#C0C0C0'); grad.addColorStop(0.3, '#E8E8E8'); grad.addColorStop(0.6, '#A0A0A0'); grad.addColorStop(1, '#D0D0D0');
+          offCtx.fillStyle = grad;
+        } else if (currentBorder === 'floral') {
+          offCtx.fillStyle = '#F5E6F0';
+          offCtx.fillRect(0, 0, size.w, size.h);
+          // 碎花小点装饰
+          offCtx.fillStyle = 'rgba(200,160,200,0.3)';
+          for (var fx = 0; fx < size.w; fx += 40) {
+            for (var fy = 0; fy < size.h; fy += 40) {
+              offCtx.beginPath(); offCtx.arc(fx + 20, fy + 20, 4, 0, Math.PI * 2); offCtx.fill();
+            }
+          }
+        } else {
+          offCtx.fillStyle = border.color;
+          offCtx.fillRect(0, 0, size.w, size.h);
+        }
 
         // 绘制每个格子
         for (var i = 0; i < rects.length; i++) {
@@ -2726,8 +3296,27 @@
 
           offCtx.save();
 
-          // 圆角裁剪
-          if (radiusPx > 0) {
+          // 模板特殊裁剪
+          if (currentTemplate === 'heart') {
+            var hx = r.x + r.w/2;
+            offCtx.beginPath();
+            offCtx.moveTo(hx, r.y + r.h);
+            offCtx.bezierCurveTo(r.x - r.w*0.1, r.y + r.h*0.6, r.x, r.y + r.h*0.15, hx, r.y + r.h*0.25);
+            offCtx.bezierCurveTo(r.x + r.w, r.y + r.h*0.15, r.x + r.w*1.1, r.y + r.h*0.6, hx, r.y + r.h);
+            offCtx.clip();
+          } else if (currentTemplate === 'wave') {
+            offCtx.beginPath();
+            var ws = 16;
+            for (var wi = 0; wi <= ws; wi++) {
+              var wx = r.x + (r.w / ws) * wi;
+              var wy = r.y + Math.sin(wi * 0.9) * 6;
+              if (wi === 0) offCtx.moveTo(wx, wy); else offCtx.lineTo(wx, wy);
+            }
+            offCtx.lineTo(r.x + r.w, r.y + r.h); offCtx.lineTo(r.x, r.y + r.h);
+            offCtx.closePath(); offCtx.clip();
+          } else if (currentTemplate === 'pixelgrid') {
+            offCtx.beginPath(); offCtx.rect(r.x, r.y, r.w, r.h); offCtx.clip();
+          } else if (radiusPx > 0) {
             roundRectPath(offCtx, r.x, r.y, r.w, r.h, radiusPx);
             offCtx.clip();
           }
@@ -2756,18 +3345,34 @@
 
           // XP像素格边框额外描边
           if (currentBorder === 'xp') {
-            offCtx.strokeStyle = '#ACA899';
-            offCtx.lineWidth = 3;
-            if (radiusPx > 0) {
-              roundRectPath(offCtx, r.x, r.y, r.w, r.h, radiusPx);
-            } else {
-              offCtx.beginPath();
-              offCtx.rect(r.x, r.y, r.w, r.h);
-            }
-            offCtx.stroke();
+            offCtx.strokeStyle = '#ACA899'; offCtx.lineWidth = 3;
+            offCtx.beginPath(); offCtx.rect(r.x, r.y, r.w, r.h); offCtx.stroke();
+          } else if (currentTemplate === 'pixelgrid') {
+            offCtx.strokeStyle = '#666'; offCtx.lineWidth = 3;
+            offCtx.setLineDash([4, 4]);
+            offCtx.beginPath(); offCtx.rect(r.x, r.y, r.w, r.h); offCtx.stroke();
+            offCtx.setLineDash([]);
           }
         }
 
+        // 拍立得底部文字
+        if (currentTemplate.indexOf('polaroid') >= 0) {
+          var pText = document.getElementById('polaroid-text');
+          var pColor = document.getElementById('polaroid-text-color');
+          var txt = (pText && pText.value) ? pText.value : '';
+          var tColor = (pColor && pColor.value) ? pColor.value : '#000';
+          if (txt) {
+            var textY = rects[0].y + rects[0].h + 60;
+            offCtx.fillStyle = tColor;
+            offCtx.font = 'bold 36px "宋体","SimSun",serif';
+            offCtx.textAlign = 'center';
+            offCtx.fillText(txt, size.w / 2, textY);
+            offCtx.textAlign = 'left';
+          }
+        }
+
+        // 模板附加效果
+        offCtx = applyTemplateFX(offCtx, offCanvas);
         return offCanvas;
       }
 
@@ -2851,6 +3456,22 @@
           updatePreview();
         }
       }, 500);
+
+      // 模板特效按钮
+      var tfxBtns = document.querySelectorAll('#template-fx .filter-btn');
+      tfxBtns.forEach(function(b) {
+        b.addEventListener('click', function() {
+          tfxBtns.forEach(function(x) { x.classList.remove('selected'); });
+          b.classList.add('selected');
+          currentTFX = b.getAttribute('data-tfx');
+          updatePreview();
+        });
+      });
+      // 拍立得文字输入
+      var pTextInput = document.getElementById('polaroid-text');
+      var pColorSel = document.getElementById('polaroid-text-color');
+      if (pTextInput) pTextInput.addEventListener('input', function() { updatePreview(); });
+      if (pColorSel) pColorSel.addEventListener('change', function() { updatePreview(); });
 
       // 初始预览
       setTimeout(updatePreview, 300);
@@ -3429,20 +4050,8 @@
       };
     })();
 
-    // 修改 TemplateEngine 以集成滤镜
-    // → 在 updatePreview 的合成步骤之后增加滤镜处理
-    (function() {
-      var origComposite = TemplateEngine.getCompositeCanvas;
-      // 包装 getCompositeCanvas，自动附加滤镜
-      TemplateEngine.getCompositeCanvas = function() {
-        var rawCanvas = origComposite.call(TemplateEngine);
-        return FilterEngine.applyFilter(rawCanvas);
-      };
-      // 包装 updatePreview，让预览也经过滤镜
-      var origUpdatePreview = TemplateEngine.updatePreview;
-      // 通过重写 composite 步骤来集成滤镜 —— 更干净的做法是 hook getCompositeCanvas
-      // 已在上面完成 hook，updatePreview 内部调 composite()，我们需要 hook composite
-    })();
+    // 滤镜 + 修图 + 贴纸通过后续的 EditEngine 和 StickerEngine 钩子统一集成到 getCompositeCanvas
+    // 此处不再单独包装，避免双重滤镜
 
     // 正确的集成方式：在 TemplateEngine 的 updatePreview 中，
     // 合成的 canvas 自动经过 FilterEngine.applyFilter
@@ -3493,18 +4102,75 @@
 
     // ===== 修图引擎（亮度/对比度/饱和度/色温） =====
     var EditEngine = (function() {
-      var brightness = 0, contrast = 0, saturation = 0, warmth = 0;
+      var brightness = 0, contrast = 0, saturation = 0, warmth = 0, sharpen = 0, blur = 0;
+      var rotateAngle = 0; // 0, 90, 180, 270
+      var flipH = false, flipV = false;
 
       function applyEdits(sourceCanvas) {
-        if (brightness === 0 && contrast === 0 && saturation === 0 && warmth === 0) {
-          return sourceCanvas; // 无修改，直接返回
+        // 先应用旋转/翻转
+        var processed = sourceCanvas;
+        if (rotateAngle !== 0 || flipH || flipV) {
+          var tfCanvas = document.createElement('canvas');
+          var sw = processed.width, sh = processed.height;
+          if (rotateAngle === 90 || rotateAngle === 270) {
+            tfCanvas.width = sh; tfCanvas.height = sw;
+          } else {
+            tfCanvas.width = sw; tfCanvas.height = sh;
+          }
+          var tfCtx = tfCanvas.getContext('2d');
+          tfCtx.save();
+          tfCtx.translate(tfCanvas.width / 2, tfCanvas.height / 2);
+          tfCtx.rotate(rotateAngle * Math.PI / 180);
+          tfCtx.scale(flipH ? -1 : 1, flipV ? -1 : 1);
+          tfCtx.drawImage(processed, -sw / 2, -sh / 2);
+          tfCtx.restore();
+          processed = tfCanvas;
         }
-        var w = sourceCanvas.width, h = sourceCanvas.height;
+        // 再应用模糊
+        if (blur > 0) {
+          var blurCanvas = document.createElement('canvas');
+          blurCanvas.width = sourceCanvas.width; blurCanvas.height = sourceCanvas.height;
+          var blurCtx = blurCanvas.getContext('2d');
+          blurCtx.filter = 'blur(' + (blur * 0.8) + 'px)';
+          blurCtx.drawImage(sourceCanvas, 0, 0);
+          blurCtx.filter = 'none';
+          processed = blurCanvas;
+        }
+        // 再应用锐化
+        if (sharpen > 0) {
+          var sharpCanvas = document.createElement('canvas');
+          sharpCanvas.width = processed.width; sharpCanvas.height = processed.height;
+          var sharpCtx = sharpCanvas.getContext('2d');
+          sharpCtx.drawImage(processed, 0, 0);
+          var imageData = sharpCtx.getImageData(0, 0, sharpCanvas.width, sharpCanvas.height);
+          var pixels = imageData.data;
+          var w = sharpCanvas.width, h = sharpCanvas.height;
+          var strength = sharpen / 30; // 0-1
+          var orig = new Uint8ClampedArray(pixels);
+          for (var y = 1; y < h - 1; y++) {
+            for (var x = 1; x < w - 1; x++) {
+              var idx = (y * w + x) * 4;
+              for (var ch = 0; ch < 3; ch++) {
+                var center = orig[idx + ch];
+                var sum = center * 5 - orig[idx - w*4 + ch] - orig[idx + w*4 + ch] - orig[idx - 4 + ch] - orig[idx + 4 + ch];
+                pixels[idx + ch] = Math.max(0, Math.min(255, center + sum * strength));
+              }
+            }
+          }
+          sharpCtx.putImageData(imageData, 0, 0);
+          processed = sharpCanvas;
+        }
+
+        if (brightness === 0 && contrast === 0 && saturation === 0 && warmth === 0) {
+          return processed;
+        }
+
+        var w2 = processed.width, h2 = processed.height;
         var outCanvas = document.createElement('canvas');
-        outCanvas.width = w; outCanvas.height = h;
+        outCanvas.width = w2; outCanvas.height = h2;
         var ctx = outCanvas.getContext('2d');
-        ctx.drawImage(sourceCanvas, 0, 0);
-        var imageData = ctx.getImageData(0, 0, w, h);
+        ctx.drawImage(processed, 0, 0);
+        var imageData = ctx.getImageData(0, 0, w2, h2);
         var pixels = imageData.data;
 
         for (var i = 0; i < pixels.length; i += 4) {
@@ -3547,7 +4213,9 @@
         { id: 'edit-brightness', valId: 'brightness-val', prop: 'brightness', fmt: function(v){return v;} },
         { id: 'edit-contrast', valId: 'contrast-val', prop: 'contrast', fmt: function(v){return v;} },
         { id: 'edit-saturation', valId: 'saturation-val', prop: 'saturation', fmt: function(v){return v;} },
-        { id: 'edit-warmth', valId: 'warmth-val', prop: 'warmth', fmt: function(v){return v > 0 ? '+' + v : '' + v;} }
+        { id: 'edit-warmth', valId: 'warmth-val', prop: 'warmth', fmt: function(v){return v > 0 ? '+' + v : '' + v;} },
+        { id: 'edit-sharpen', valId: 'sharpen-val', prop: 'sharpen', fmt: function(v){return v;} },
+        { id: 'edit-blur', valId: 'blur-val', prop: 'blur', fmt: function(v){return v;} }
       ];
       sliders.forEach(function(s) {
         var el = document.getElementById(s.id);
@@ -3566,8 +4234,26 @@
 
       // 重置按钮
       var resetBtn = document.getElementById('edit-reset-btn');
+      // 旋转按钮
+      var rotBtn = document.getElementById('edit-rotate-btn');
+      if (rotBtn) rotBtn.addEventListener('click', function() {
+        rotateAngle = (rotateAngle + 90) % 360;
+        TemplateEngine.updatePreview();
+      });
+      // 水平翻转
+      var flipHBtn = document.getElementById('edit-flip-h-btn');
+      if (flipHBtn) flipHBtn.addEventListener('click', function() {
+        flipH = !flipH; TemplateEngine.updatePreview();
+      });
+      // 垂直翻转
+      var flipVBtn = document.getElementById('edit-flip-v-btn');
+      if (flipVBtn) flipVBtn.addEventListener('click', function() {
+        flipV = !flipV; TemplateEngine.updatePreview();
+      });
+
       if (resetBtn) resetBtn.addEventListener('click', function() {
-        brightness = 0; contrast = 0; saturation = 0; warmth = 0;
+        brightness = 0; contrast = 0; saturation = 0; warmth = 0; sharpen = 0; blur = 0;
+        rotateAngle = 0; flipH = false; flipV = false;
         sliders.forEach(function(s) {
           var el = document.getElementById(s.id);
           var vl = document.getElementById(s.valId);
@@ -3579,7 +4265,7 @@
 
       return {
         applyEdits: applyEdits,
-        reset: function() { brightness = 0; contrast = 0; saturation = 0; warmth = 0; }
+        reset: function() { brightness = 0; contrast = 0; saturation = 0; warmth = 0; sharpen = 0; blur = 0; rotateAngle = 0; flipH = false; flipV = false; }
       };
     })();
 
@@ -3596,10 +4282,20 @@
 
     console.log('✅ 修图工具：亮度/对比度/饱和度/色温滑块');
 
-    // ===== 贴纸引擎 =====
+    // ===== 贴纸引擎（升级版：拖拽 + 艺术字） =====
     var StickerEngine = (function() {
-      var stickers = []; // {emoji, x, y} — 相对预览区的百分比坐标
+      var stickers = []; // {emoji, x, y} — 相对坐标
       var selectedEmoji = null;
+      var draggingIdx = -1;  // 正在拖拽的贴纸索引
+      var dragStartX, dragStartY, stickerStartX, stickerStartY;
+
+      // 判断是否为艺术字（文本贴纸）
+      function isArtText(emoji) {
+        return emoji && emoji.length > 2; // 如 "💜LOVE"
+      }
+      function getArtText(emoji) {
+        return emoji.replace(/[^\w一-鿿]/g, '').replace(/^./, ''); // 去掉首个 emoji
+      }
 
       // 贴纸按钮点击
       var stickerBtns = document.querySelectorAll('.sticker-btn');
@@ -3608,29 +4304,70 @@
           stickerBtns.forEach(function(b) { b.classList.remove('selected'); });
           btn.classList.add('selected');
           selectedEmoji = btn.getAttribute('data-emoji');
-          WindowManager.setStatus('🌟 已选择贴纸：' + selectedEmoji + '，点击预览区放置');
+          draggingIdx = -1;
+          WindowManager.setStatus('🌟 已选贴纸，点击预览区放置');
         });
       });
 
-      // 点击预览区放置贴纸
+      // 在给定坐标找到贴纸
+      function findStickerAt(px, py) {
+        for (var i = stickers.length - 1; i >= 0; i--) {
+          var s = stickers[i];
+          var dist = Math.sqrt((s.x - px) * (s.x - px) + (s.y - py) * (s.y - py));
+          if (dist < 0.06) return i; // 6% 容差
+        }
+        return -1;
+      }
+
       var previewArea = document.getElementById('preview-area');
       if (previewArea) {
-        previewArea.addEventListener('click', function(e) {
-          if (!selectedEmoji) return;
-          // 只响应预览 canvas 或预览区上的点击
+        previewArea.addEventListener('mousedown', function(e) {
           var rect = previewArea.getBoundingClientRect();
           var x = (e.clientX - rect.left) / rect.width;
           var y = (e.clientY - rect.top) / rect.height;
           if (x < 0 || x > 1 || y < 0 || y > 1) return;
-          stickers.push({ emoji: selectedEmoji, x: x, y: y });
+
+          // 检查是否点击了已有贴纸（拖拽模式）
+          var idx = findStickerAt(x, y);
+          if (idx >= 0) {
+            draggingIdx = idx;
+            stickerBtns.forEach(function(b) { b.classList.remove('selected'); });
+            selectedEmoji = null;
+            dragStartX = e.clientX; dragStartY = e.clientY;
+            stickerStartX = stickers[idx].x; stickerStartY = stickers[idx].y;
+            WindowManager.setStatus('🌟 拖拽贴纸中...');
+            e.preventDefault();
+            return;
+          }
+
+          // 放置新贴纸
+          if (selectedEmoji) {
+            stickers.push({ emoji: selectedEmoji, x: x, y: y });
+            renderStickersOnPreview();
+            WindowManager.setStatus('🌟 贴纸已放置（共' + stickers.length + '个）');
+          }
+        });
+
+        document.addEventListener('mousemove', function(e) {
+          if (draggingIdx < 0) return;
+          var rect = previewArea.getBoundingClientRect();
+          var dx = (e.clientX - dragStartX) / rect.width;
+          var dy = (e.clientY - dragStartY) / rect.height;
+          stickers[draggingIdx].x = Math.max(0, Math.min(1, stickerStartX + dx));
+          stickers[draggingIdx].y = Math.max(0, Math.min(1, stickerStartY + dy));
           renderStickersOnPreview();
-          WindowManager.setStatus('🌟 贴纸已放置：' + selectedEmoji + '（共' + stickers.length + '个）');
+        });
+
+        document.addEventListener('mouseup', function() {
+          if (draggingIdx >= 0) {
+            WindowManager.setStatus('🌟 贴纸已移动');
+            draggingIdx = -1;
+          }
         });
       }
 
       // 在预览画布上渲染贴纸
       function renderStickersOnPreview() {
-        // 在预览更新后叠加贴纸
         setTimeout(function() {
           var previewCanvas = document.getElementById('preview-canvas');
           if (!previewCanvas || previewCanvas.style.display === 'none') return;
@@ -3639,26 +4376,46 @@
             var s = stickers[i];
             var px = s.x * previewCanvas.width;
             var py = s.y * previewCanvas.height;
-            ctx.font = '24px serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(s.emoji, px, py);
+            if (isArtText(s.emoji)) {
+              // 艺术字：像素字体渲染
+              var txt = getArtText(s.emoji);
+              ctx.font = 'bold 22px "宋体","SimSun",serif';
+              ctx.fillStyle = '#C0C';
+              ctx.shadowColor = '#0FF'; ctx.shadowBlur = 6;
+              ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+              ctx.fillText(txt, px, py);
+              ctx.shadowBlur = 0;
+            } else {
+              ctx.font = '24px serif';
+              ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+              ctx.fillText(s.emoji, px, py);
+            }
           }
         }, 200);
       }
 
-      // 在合成画布上渲染贴纸（供导出使用）
+      // 在合成画布上渲染贴纸（供导出）
       function renderStickersOnComposite(canvas) {
         var ctx = canvas.getContext('2d');
         for (var i = 0; i < stickers.length; i++) {
           var s = stickers[i];
           var px = s.x * canvas.width;
           var py = s.y * canvas.height;
-          var size = Math.max(40, canvas.width * 0.045);
-          ctx.font = size + 'px serif';
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillText(s.emoji, px, py);
+          if (isArtText(s.emoji)) {
+            var txt = getArtText(s.emoji);
+            var sz = Math.max(60, canvas.width * 0.06);
+            ctx.font = 'bold ' + sz + 'px "宋体","SimSun",serif';
+            ctx.fillStyle = '#C0C';
+            ctx.shadowColor = '#0FF'; ctx.shadowBlur = 12;
+            ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            ctx.fillText(txt, px, py);
+            ctx.shadowBlur = 0;
+          } else {
+            var size = Math.max(40, canvas.width * 0.045);
+            ctx.font = size + 'px serif';
+            ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+            ctx.fillText(s.emoji, px, py);
+          }
         }
         return canvas;
       }
@@ -3668,6 +4425,7 @@
       if (clearBtn) clearBtn.addEventListener('click', function() {
         stickers = [];
         selectedEmoji = null;
+        draggingIdx = -1;
         stickerBtns.forEach(function(b) { b.classList.remove('selected'); });
         TemplateEngine.updatePreview();
         WindowManager.setStatus('🌟 贴纸已清除');
@@ -3696,7 +4454,210 @@
       };
     })();
 
-    console.log('✅ 像素贴纸库：12款贴纸 + 点击放置 + 清除');
+    console.log('✅ 像素贴纸库：19款贴纸 + 拖拽移动 + 艺术字');
+
+    // ===== 涂鸦笔刷引擎 =====
+    var BrushEngine = (function() {
+      var brushMode = 'marker'; // 'marker' | 'chalk' | null
+      var brushColor = '#FF00FF';
+      var isDrawing = false;
+      var brushStrokes = []; // 存储笔刷痕迹 {points, color, mode}
+      var currentStroke = null;
+
+      var previewArea = document.getElementById('preview-area');
+      var previewCanvas = document.getElementById('preview-canvas');
+
+      // 笔刷按钮
+      var brushBtns = document.querySelectorAll('.brush-btn');
+      brushBtns.forEach(function(b) {
+        b.addEventListener('click', function() {
+          brushBtns.forEach(function(x) { x.classList.remove('active'); });
+          if (b.getAttribute('data-brush') === brushMode && b.classList.contains('active')) {
+            brushMode = null; // 取消笔刷
+          } else {
+            b.classList.add('active');
+            brushMode = b.getAttribute('data-brush');
+          }
+          WindowManager.setStatus(brushMode ? '🖌 笔刷模式：' + (brushMode === 'marker' ? '荧光笔' : '粉笔') : '🖌 笔刷已取消');
+        });
+      });
+
+      // 颜色选择
+      var colorInput = document.getElementById('brush-color');
+      if (colorInput) colorInput.addEventListener('input', function() { brushColor = colorInput.value; });
+
+      // 清除涂鸦
+      var clearBtn = document.getElementById('brush-clear-btn');
+      if (clearBtn) clearBtn.addEventListener('click', function() {
+        brushStrokes = [];
+        TemplateEngine.updatePreview();
+      });
+
+      // 在预览区上绘画
+      if (previewArea) {
+        previewArea.addEventListener('mousedown', function(e) {
+          if (!brushMode) return;
+          isDrawing = true;
+          var rect = previewArea.getBoundingClientRect();
+          currentStroke = {
+            points: [{ x: (e.clientX - rect.left) / rect.width, y: (e.clientY - rect.top) / rect.height }],
+            color: brushColor, mode: brushMode
+          };
+          e.preventDefault();
+        });
+
+        document.addEventListener('mousemove', function(e) {
+          if (!isDrawing || !currentStroke) return;
+          var rect = previewArea.getBoundingClientRect();
+          currentStroke.points.push({
+            x: (e.clientX - rect.left) / rect.width,
+            y: (e.clientY - rect.top) / rect.height
+          });
+          renderBrushStrokes();
+        });
+
+        document.addEventListener('mouseup', function() {
+          if (isDrawing && currentStroke) {
+            brushStrokes.push(currentStroke);
+            currentStroke = null;
+          }
+          isDrawing = false;
+        });
+      }
+
+      function renderBrushStrokes() {
+        setTimeout(function() {
+          var canvas = document.getElementById('preview-canvas');
+          if (!canvas || canvas.style.display === 'none') return;
+          var ctx = canvas.getContext('2d');
+          var allStrokes = brushStrokes.concat(currentStroke ? [currentStroke] : []);
+          for (var s = 0; s < allStrokes.length; s++) {
+            var stroke = allStrokes[s];
+            if (stroke.points.length < 1) continue;
+            ctx.save();
+            ctx.globalAlpha = stroke.mode === 'chalk' ? 0.6 : 0.35;
+            ctx.strokeStyle = stroke.color;
+            ctx.lineWidth = stroke.mode === 'chalk' ? 6 : 14;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            if (stroke.mode === 'chalk') {
+              ctx.setLineDash([3, 2]);
+            }
+            ctx.beginPath();
+            ctx.moveTo(stroke.points[0].x * canvas.width, stroke.points[0].y * canvas.height);
+            for (var p = 1; p < stroke.points.length; p++) {
+              ctx.lineTo(stroke.points[p].x * canvas.width, stroke.points[p].y * canvas.height);
+            }
+            ctx.stroke();
+            ctx.setLineDash([]);
+            ctx.restore();
+          }
+        }, 50);
+      }
+
+      // 在合成画布上渲染笔刷
+      function renderBrushOnComposite(canvas) {
+        var ctx = canvas.getContext('2d');
+        for (var s = 0; s < brushStrokes.length; s++) {
+          var stroke = brushStrokes[s];
+          if (stroke.points.length < 1) continue;
+          ctx.save();
+          ctx.globalAlpha = stroke.mode === 'chalk' ? 0.6 : 0.35;
+          ctx.strokeStyle = stroke.color;
+          ctx.lineWidth = stroke.mode === 'chalk' ? 18 : 40;
+          ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+          if (stroke.mode === 'chalk') ctx.setLineDash([8, 5]);
+          ctx.beginPath();
+          ctx.moveTo(stroke.points[0].x * canvas.width, stroke.points[0].y * canvas.height);
+          for (var p = 1; p < stroke.points.length; p++) {
+            ctx.lineTo(stroke.points[p].x * canvas.width, stroke.points[p].y * canvas.height);
+          }
+          ctx.stroke();
+          ctx.setLineDash([]);
+          ctx.restore();
+        }
+        return canvas;
+      }
+
+      // hook 预览更新
+      var origUP = TemplateEngine.updatePreview;
+      TemplateEngine.updatePreview = function() {
+        origUP();
+        if (brushStrokes.length > 0 || currentStroke) renderBrushStrokes();
+      };
+
+      return { renderBrushOnComposite: renderBrushOnComposite };
+    })();
+
+    // 集成涂鸦到导出
+    (function() {
+      var orig = TemplateEngine.getCompositeCanvas;
+      TemplateEngine.getCompositeCanvas = function() {
+        var c = orig.call(TemplateEngine);
+        return BrushEngine.renderBrushOnComposite(c);
+      };
+    })();
+
+    // ===== 美颜引擎 =====
+    var BeautyEngine = (function() {
+      var currentBeauty = 'none';
+
+      function applyBeauty(sourceCanvas) {
+        if (currentBeauty === 'none') return sourceCanvas;
+        var w = sourceCanvas.width, h = sourceCanvas.height;
+        var out = document.createElement('canvas');
+        out.width = w; out.height = h;
+        var ctx = out.getContext('2d');
+
+        if (currentBeauty === 'smooth') {
+          // 轻量磨皮：小半径模糊 + 原图叠加
+          ctx.filter = 'blur(3px)'; ctx.drawImage(sourceCanvas, 0, 0); ctx.filter = 'none';
+          ctx.globalAlpha = 0.4; ctx.drawImage(sourceCanvas, 0, 0); ctx.globalAlpha = 1;
+        } else if (currentBeauty === 'brighten') {
+          // 肤色提亮
+          ctx.drawImage(sourceCanvas, 0, 0);
+          var id = ctx.getImageData(0, 0, w, h), px = id.data;
+          for (var i = 0; i < px.length; i += 4) {
+            // 只提亮肤色范围
+            if (px[i] > 80 && px[i+1] > 50 && px[i+2] > 40 && px[i] > px[i+2]) {
+              px[i] = Math.min(255, px[i] + 15); px[i+1] = Math.min(255, px[i+1] + 10); px[i+2] = Math.min(255, px[i+2] + 8);
+            }
+          }
+          ctx.putImageData(id, 0, 0);
+        } else if (currentBeauty === 'blush') {
+          // 淡腮红：在中心区域叠加粉色
+          ctx.drawImage(sourceCanvas, 0, 0);
+          var cg = ctx.createRadialGradient(w*0.45, h*0.5, w*0.15, w*0.5, h*0.5, w*0.4);
+          cg.addColorStop(0, 'rgba(255,180,180,0.12)'); cg.addColorStop(1, 'rgba(0,0,0,0)');
+          ctx.fillStyle = cg; ctx.fillRect(0, 0, w, h);
+        }
+        return out;
+      }
+
+      // 美颜按钮
+      var bBtns = document.querySelectorAll('.beauty-btn');
+      bBtns.forEach(function(b) {
+        b.addEventListener('click', function() {
+          bBtns.forEach(function(x) { x.classList.remove('selected'); });
+          b.classList.add('selected');
+          currentBeauty = b.getAttribute('data-beauty');
+          TemplateEngine.updatePreview();
+        });
+      });
+
+      return { applyBeauty: applyBeauty };
+    })();
+
+    // 集成美颜到导出
+    (function() {
+      var orig = TemplateEngine.getCompositeCanvas;
+      TemplateEngine.getCompositeCanvas = function() {
+        var c = orig.call(TemplateEngine);
+        return BeautyEngine.applyBeauty(c);
+      };
+    })();
+
+    console.log('✅ 涂鸦笔刷（荧光笔+粉笔）+ 美颜（磨皮/提亮/腮红）');
     console.log('⏳ 执行第 9 步：导出 + 相册...');
 
     // ===== Phase 3：本地相册（IndexedDB） =====
@@ -3719,7 +4680,7 @@
         });
       }
 
-      function savePhoto(canvas, callback) {
+      function savePhoto(canvas, type, callback) {
         canvas.toBlob(function(blob) {
           if (!blob) { callback(false); return; }
           openDB().then(function(d) {
@@ -3727,7 +4688,7 @@
             var store = tx.objectStore('photos');
             var now = new Date();
             var ts = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0')+'-'+String(now.getDate()).padStart(2,'0')+' '+String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
-            store.add({ blob: blob, timestamp: ts, name: '人生四格_' + ts.replace(/[:\s]/g,'-') });
+            store.add({ blob: blob, timestamp: ts, name: (type||'四格')+'_'+ts.replace(/[:\s]/g,'-'), type: type||'四格成品' });
             tx.oncomplete = function() { callback(true); };
             tx.onerror = function() { callback(false); };
           });
@@ -3760,7 +4721,7 @@
         });
       }
 
-      return { savePhoto: savePhoto, getAllPhotos: getAllPhotos, deletePhoto: deletePhoto, clearAll: clearAll };
+      return { savePhoto: savePhoto, getAllPhotos: getAllPhotos, deletePhoto: deletePhoto, clearAll: clearAll, openDB: openDB };
     })();
 
     // 保存到相册（在导出模块中增加）
@@ -3775,10 +4736,12 @@
             alert('⚠️ 请先导入素材再保存');
             return;
           }
-          AlbumModule.savePhoto(canvas, function(success) {
+          var tmpl = TemplateEngine.getTemplate();
+          var saveType = (tmpl.indexOf('polaroid') >= 0) ? '拍立得' : '四格成品';
+          AlbumModule.savePhoto(canvas, saveType, function(success) {
             if (success) {
-              WindowManager.setStatus('💾 已保存到本地相册！');
-              alert('✅ 照片已保存到本地相册！\n\n点击工具栏 📂 按钮查看相册');
+              WindowManager.setStatus('💾 已保存到本地相册！[' + saveType + ']');
+              alert('✅ 照片已保存到本地相册！\n类型：' + saveType + '\n\n点击工具栏 📂 按钮查看相册');
             } else {
               WindowManager.setStatus('⚠️ 保存失败');
             }
@@ -3788,6 +4751,336 @@
     })();
 
     console.log('✅ Phase 3 本地相册（IndexedDB）完成');
+
+    // ===== 相册查看器（升级版） =====
+    (function() {
+      var albWindow = document.getElementById('album-window');
+      var albGrid = document.getElementById('album-grid');
+      var albEmpty = document.getElementById('album-empty');
+      var albStatus = document.getElementById('album-status');
+      var albTitleBar = document.getElementById('album-title-bar');
+
+      if (!albWindow) return;
+
+      var currentFolder = 'all';
+
+      function loadAndRender() {
+        AlbumModule.getAllPhotos(function(photos) {
+          albGrid.innerHTML = '';
+          // 按文件夹过滤
+          if (currentFolder === '四格成品') photos = photos.filter(function(p) { return (p.type||'').indexOf('四格') >= 0; });
+          else if (currentFolder === '拍立得') photos = photos.filter(function(p) { return (p.type||'').indexOf('拍立得') >= 0 || (p.type||'').indexOf('polaroid') >= 0; });
+          else if (currentFolder === '原始素材') photos = photos.filter(function(p) { return (p.type||'').indexOf('素材') >= 0; });
+
+          if (!photos || photos.length === 0) {
+            albEmpty.style.display = 'block';
+            albStatus.textContent = '📁 该文件夹为空';
+            return;
+          }
+          albEmpty.style.display = 'none';
+          var count = 0;
+          photos.reverse();
+          photos.forEach(function(photo) {
+            var url = URL.createObjectURL(photo.blob);
+            var div = document.createElement('div');
+            div.className = 'album-thumb';
+            div.title = (photo.name || '未命名') + ' [' + (photo.type || '') + ']';
+
+            var img = document.createElement('img');
+            img.src = url;
+            div.appendChild(img);
+
+            var info = document.createElement('div');
+            info.className = 'thumb-info';
+            info.innerHTML = '<span>' + (photo.timestamp||'') + '</span><span>' + (photo.type||'') + '</span>';
+            div.appendChild(info);
+
+            // 操作按钮行
+            var btnRow = document.createElement('div');
+            btnRow.style.cssText = 'position:absolute;top:2px;right:2px;display:none;gap:2px;';
+            div.appendChild(btnRow);
+            div.addEventListener('mouseenter', function() { btnRow.style.display = 'flex'; });
+            div.addEventListener('mouseleave', function() { btnRow.style.display = 'none'; });
+
+            // 删除
+            var delBtn = document.createElement('button');
+            delBtn.className = 'thumb-del';
+            delBtn.textContent = '✕'; delBtn.title = '删除';
+            delBtn.onclick = function(e) { e.stopPropagation();
+              if (confirm('确定删除？')) { AlbumModule.deletePhoto(photo.id, function() { URL.revokeObjectURL(url); loadAndRender(); }); }
+            };
+            btnRow.appendChild(delBtn);
+
+            // 重命名
+            var renBtn = document.createElement('button');
+            renBtn.className = 'thumb-del'; renBtn.style.cssText += 'background:#3C9A00;border-color:#1A6A00;right:20px;';
+            renBtn.textContent = '✎'; renBtn.title = '重命名';
+            renBtn.onclick = function(e) { e.stopPropagation();
+              var nn = prompt('新名字：', photo.name || '');
+              if (nn && nn.trim()) {
+                AlbumModule.openDB().then(function(d) {
+                  var tx = d.transaction('photos','readwrite');
+                  var store = tx.objectStore('photos');
+                  var req = store.get(photo.id);
+                  req.onsuccess = function() { var r = req.result; r.name = nn.trim(); store.put(r); loadAndRender(); };
+                });
+              }
+            };
+            btnRow.appendChild(renBtn);
+
+            // 重新编辑
+            var reBtn = document.createElement('button');
+            reBtn.className = 'thumb-del'; reBtn.style.cssText += 'background:#316AC5;border-color:#104090;right:38px;';
+            reBtn.textContent = '↩'; reBtn.title = '重新编辑';
+            reBtn.onclick = function(e) { e.stopPropagation();
+              var tempImg = new Image();
+              tempImg.onload = function() {
+                AssetManager.addImage(tempImg);
+                albWindow.classList.add('hidden');
+                var mw = document.getElementById('main-window');
+                if (mw) { mw.classList.remove('hidden','minimized'); WindowManager.bringToTop(); }
+                WindowManager.setStatus('📂 已从相册导入，可更换模板/滤镜重新编辑');
+              };
+              tempImg.src = url;
+            };
+            btnRow.appendChild(reBtn);
+
+            // 点击预览
+            div.addEventListener('click', function() { showPreview(url); });
+
+            albGrid.appendChild(div);
+            count++;
+          });
+          albStatus.textContent = '📁 [' + currentFolder + '] 共 ' + count + ' 张';
+        });
+      }
+
+      function showPreview(url) {
+        var overlay = document.getElementById('album-preview-overlay');
+        if (!overlay) {
+          overlay = document.createElement('div');
+          overlay.id = 'album-preview-overlay';
+          overlay.innerHTML = '<span class="preview-close">✕</span><img src="" />';
+          document.body.appendChild(overlay);
+          overlay.querySelector('.preview-close').addEventListener('click', function() {
+            overlay.style.display = 'none';
+          });
+          overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) overlay.style.display = 'none';
+          });
+        }
+        overlay.querySelector('img').src = url;
+        overlay.style.display = 'flex';
+      }
+
+      function open() {
+        albWindow.classList.remove('hidden');
+        albWindow.style.zIndex = '5000';
+        loadAndRender();
+      }
+
+      function close() {
+        albWindow.classList.add('hidden');
+      }
+
+      // 事件
+      document.getElementById('album-close-btn').addEventListener('click', close);
+      document.getElementById('album-refresh-btn').addEventListener('click', loadAndRender);
+      // 文件夹筛选
+      document.getElementById('album-folder-all').addEventListener('click', function() { currentFolder = 'all'; loadAndRender(); });
+      document.getElementById('album-folder-4grid').addEventListener('click', function() { currentFolder = '四格成品'; loadAndRender(); });
+      document.getElementById('album-folder-polaroid').addEventListener('click', function() { currentFolder = '拍立得'; loadAndRender(); });
+      document.getElementById('album-delete-all').addEventListener('click', function() {
+        if (confirm('⚠️ 确定要清空全部照片吗？此操作不可撤销！')) {
+          AlbumModule.clearAll(function() { loadAndRender(); });
+        }
+      });
+
+      // 拖拽
+      (function() {
+        var d = false, sx, sy, wx, wy;
+        albTitleBar.addEventListener('mousedown', function(e) {
+          if (e.target.closest('.win-ctrl-btn')) return;
+          d = true; sx = e.clientX; sy = e.clientY;
+          wx = albWindow.offsetLeft; wy = albWindow.offsetTop;
+          e.preventDefault();
+        });
+        document.addEventListener('mousemove', function(e) {
+          if (!d) return;
+          albWindow.style.left = Math.max(0, Math.min(wx + e.clientX - sx, window.innerWidth - 200)) + 'px';
+          albWindow.style.top = Math.max(0, Math.min(wy + e.clientY - sy, window.innerHeight - 100)) + 'px';
+        });
+        document.addEventListener('mouseup', function() { d = false; });
+      })();
+
+      // 暴露到全局
+      window.AlbumViewer = { open: open, close: close, refresh: loadAndRender };
+    })();
+
+    // 工具栏第一个按钮 → 打开相册
+    (function() {
+      var tbb = document.querySelectorAll('.win-toolbar .tb-btn');
+      if (tbb[0]) {
+        tbb[0].title = '打开相册';
+        tbb[0].addEventListener('click', function() {
+          if (window.AlbumViewer) window.AlbumViewer.open();
+        });
+      }
+    })();
+
+    console.log('✅ 相册查看器：网格浏览 + 全屏预览 + 删除 + 清空');
+
+    // ===== XP 音效系统 =====
+    var SoundEngine = (function() {
+      var muted = false;
+      var audioCtx = null;
+
+      function getCtx() {
+        if (!audioCtx) {
+          var AC = window.AudioContext || window.webkitAudioContext;
+          audioCtx = new AC();
+        }
+        return audioCtx;
+      }
+
+      // XP 叮咚提示音（双音调：高→低）
+      function playDing() {
+        if (muted) return;
+        try {
+          var ctx = getCtx();
+          var now = ctx.currentTime;
+          [800, 600].forEach(function(freq, i) {
+            var osc = ctx.createOscillator();
+            var gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, now + i * 0.08);
+            gain.gain.setValueAtTime(0.15, now + i * 0.08);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.12);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now + i * 0.08);
+            osc.stop(now + i * 0.08 + 0.15);
+          });
+        } catch(e) {}
+      }
+
+      // 点击音（短促咔嗒）
+      function playClick() {
+        if (muted) return;
+        try {
+          var ctx = getCtx();
+          var osc = ctx.createOscillator();
+          var gain = ctx.createGain();
+          osc.type = 'square';
+          osc.frequency.setValueAtTime(1200, ctx.currentTime);
+          gain.gain.setValueAtTime(0.06, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.03);
+          osc.connect(gain); gain.connect(ctx.destination);
+          osc.start(); osc.stop(ctx.currentTime + 0.04);
+        } catch(e) {}
+      }
+
+      // 保存成功音（三连升调）
+      function playSave() {
+        if (muted) return;
+        try {
+          var ctx = getCtx();
+          [400, 600, 900].forEach(function(freq, i) {
+            var osc = ctx.createOscillator();
+            var gain = ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.1);
+            gain.gain.setValueAtTime(0.12, ctx.currentTime + i * 0.1);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.1 + 0.15);
+            osc.connect(gain); gain.connect(ctx.destination);
+            osc.start(ctx.currentTime + i * 0.1);
+            osc.stop(ctx.currentTime + i * 0.1 + 0.18);
+          });
+        } catch(e) {}
+      }
+
+      // 错误/警告音（低沉嗡嗡）
+      function playError() {
+        if (muted) return;
+        try {
+          var ctx = getCtx();
+          var osc = ctx.createOscillator();
+          var gain = ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(200, ctx.currentTime);
+          gain.gain.setValueAtTime(0.1, ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+          osc.connect(gain); gain.connect(ctx.destination);
+          osc.start(); osc.stop(ctx.currentTime + 0.3);
+        } catch(e) {}
+      }
+
+      // 启动音（XP 开机风格）
+      function playStartup() {
+        if (muted) return;
+        try {
+          var ctx = getCtx();
+          [262, 330, 392, 523].forEach(function(freq, i) {
+            var osc = ctx.createOscillator();
+            var gain = ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, ctx.currentTime + i * 0.15);
+            gain.gain.setValueAtTime(0.1, ctx.currentTime + i * 0.15);
+            gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + i * 0.15 + 0.2);
+            osc.connect(gain); gain.connect(ctx.destination);
+            osc.start(ctx.currentTime + i * 0.15);
+            osc.stop(ctx.currentTime + i * 0.15 + 0.25);
+          });
+        } catch(e) {}
+      }
+
+      function toggle() {
+        muted = !muted;
+        var btn = document.getElementById('mute-btn');
+        if (btn) btn.textContent = muted ? '🔇' : '🔊';
+        return muted;
+      }
+
+      // 托盘静音按钮
+      var muteBtn = document.createElement('span');
+      muteBtn.id = 'mute-btn';
+      muteBtn.className = 'tray-icon';
+      muteBtn.textContent = '🔊';
+      muteBtn.title = '静音/取消静音';
+      muteBtn.addEventListener('click', toggle);
+      var tray = document.getElementById('system-tray');
+      if (tray) tray.insertBefore(muteBtn, tray.firstChild);
+
+      // 自动播放启动音（需要用户交互后）
+      var startupPlayed = false;
+      document.addEventListener('click', function once() {
+        if (!startupPlayed) { playStartup(); startupPlayed = true; }
+      }, { once: true });
+
+      return {
+        ding: playDing, click: playClick, save: playSave,
+        error: playError, startup: playStartup, toggle: toggle,
+        isMuted: function() { return muted; }
+      };
+    })();
+
+    // 音效钩子：弹窗打开→叮咚，导出→保存音，错误→警告音
+    (function() {
+      // 劫持 ExportModule 的导出成功
+      var origShowSave = document.getElementById('save-dlg-ok');
+      if (origShowSave) {
+        origShowSave.addEventListener('click', function() { SoundEngine.save(); });
+      }
+      // 劫持 alert（简易）
+      var origAlert = window.alert;
+      window.alert = function(msg) {
+        if (msg.indexOf('⚠️') >= 0 || msg.indexOf('失败') >= 0) SoundEngine.error();
+        else SoundEngine.ding();
+        origAlert(msg);
+      };
+    })();
+
+    console.log('✅ 音效系统：叮咚/点击/保存/错误/启动 + 托盘静音按钮');
     console.log('⏳ 执行第 9 步：导出功能...');
 
     // ===== 第 9 步：导出模块 =====
@@ -3822,28 +5115,64 @@
         return y + '-' + mo + '-' + d + '_' + h + mi + s;
       }
 
+      // 导出尺寸预设
+      function getSizePreset() {
+        var sel = document.getElementById('export-size-select');
+        var v = sel ? sel.value : 'original';
+        switch(v) {
+          case 'print': return { w: 1800, h: 1200, label: '打印尺寸' };
+          case 'social': return { w: 1080, h: 1080, label: '朋友圈' };
+          case 'wallpaper': return { w: 1920, h: 1080, label: '桌面壁纸' };
+          case 'avatar': return { w: 500, h: 500, label: '头像' };
+          default: return { w: 0, h: 0, label: '原始尺寸' };
+        }
+      }
+
       // 执行导出
       function exportImage() {
         var count = AssetManager.getCount();
         if (count === 0) {
-          WindowManager.setStatus('⚠️ 请先导入素材再导出');
-          // 弹提示
           alert('⚠️ 没有可导出的图片\n\n请先拍照或上传至少 1 张素材！');
           return;
         }
 
         WindowManager.setStatus('💾 正在合成最终成品...');
-
-        // 获取最终合成 Canvas（模板 + 滤镜）
         var finalCanvas = TemplateEngine.getCompositeCanvas();
+        if (!finalCanvas) { WindowManager.setStatus('⚠️ 合成失败'); return; }
 
-        if (!finalCanvas) {
-          WindowManager.setStatus('⚠️ 合成失败，请重试');
-          return;
+        // 尺寸预设
+        var preset = getSizePreset();
+        var exportCanvas = finalCanvas;
+        if (preset.w > 0) {
+          exportCanvas = document.createElement('canvas');
+          exportCanvas.width = preset.w; exportCanvas.height = preset.h;
+          var ec = exportCanvas.getContext('2d');
+          ec.fillStyle = '#FFF'; ec.fillRect(0, 0, preset.w, preset.h);
+          var scale = Math.min(preset.w / finalCanvas.width, preset.h / finalCanvas.height);
+          var dw = finalCanvas.width * scale, dh = finalCanvas.height * scale;
+          ec.drawImage(finalCanvas, (preset.w - dw)/2, (preset.h - dh)/2, dw, dh);
         }
 
-        // 导出为 PNG
-        finalCanvas.toBlob(function(blob) {
+        // 画质模式
+        var quality = document.getElementById('export-quality-select');
+        var isRetro = quality && quality.value === 'retro';
+
+        // XP 水印
+        var addWatermark = document.getElementById('export-watermark');
+        var doWatermark = addWatermark && addWatermark.checked;
+        if (doWatermark) {
+          var wc = exportCanvas.getContext('2d');
+          wc.font = 'bold 28px "宋体","SimSun",serif';
+          wc.fillStyle = 'rgba(255,255,255,0.5)';
+          wc.textAlign = 'right';
+          wc.fillText('📸 photo booth', exportCanvas.width - 20, exportCanvas.height - 16);
+          wc.textAlign = 'left';
+        }
+
+        // 导出
+        var mimeType = isRetro ? 'image/jpeg' : 'image/png';
+        var qualityVal = isRetro ? 0.6 : 1;
+        exportCanvas.toBlob(function(blob) {
           if (!blob) {
             WindowManager.setStatus('⚠️ 导出失败，浏览器可能不支持');
             return;
@@ -3871,6 +5200,19 @@
           WindowManager.setStatus('✅ 导出成功：' + filename);
         }, 'image/png');
       }
+
+      // 打印按钮
+      var printBtn = document.getElementById('print-btn');
+      if (printBtn) printBtn.addEventListener('click', function() {
+        var canvas = TemplateEngine.getCompositeCanvas();
+        if (!canvas) return;
+        var w = window.open('', '_blank', 'width=800,height=600');
+        w.document.write('<html><head><title>打印 - photo booth</title></head><body style="margin:0;display:flex;justify-content:center;">');
+        w.document.write('<img src="' + canvas.toDataURL('image/png') + '" style="max-width:100%;" />');
+        w.document.write('</body></html>');
+        w.document.close();
+        setTimeout(function() { w.print(); }, 500);
+      });
 
       // 工具栏保存按钮
       var toolbarBtns = document.querySelectorAll('.win-toolbar .tb-btn');
