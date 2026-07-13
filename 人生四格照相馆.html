@@ -818,7 +818,7 @@
       border: 1px solid #ACA899;
     }
     .content-left {
-      width: 220px;
+      width: 260px;
       flex-shrink: 0;
       display: flex;
       flex-direction: column;
@@ -4306,6 +4306,8 @@
           btn.classList.add('selected');
           selectedEmoji = btn.getAttribute('data-emoji');
           draggingIdx = -1;
+          // 选中贴纸时取消笔刷模式
+          if (typeof BrushEngine !== 'undefined' && BrushEngine.deactivate) BrushEngine.deactivate();
           WindowManager.setStatus('🌟 已选贴纸，点击预览区放置');
         });
       });
@@ -4447,7 +4449,8 @@
       return {
         renderStickersOnComposite: renderStickersOnComposite,
         getStickers: function() { return stickers; },
-        hasSelection: hasSelection, isDragging: isDragging
+        hasSelection: hasSelection, isDragging: isDragging,
+        clearSelection: function() { selectedEmoji = null; stickerBtns.forEach(function(b) { b.classList.remove('selected'); }); }
       };
     })();
 
@@ -4476,14 +4479,20 @@
 
       // 笔刷按钮
       var brushBtns = document.querySelectorAll('.brush-btn');
+      function deactivate() {
+        brushMode = null;
+        brushBtns.forEach(function(x) { x.classList.remove('active'); });
+      }
       brushBtns.forEach(function(b) {
         b.addEventListener('click', function() {
-          brushBtns.forEach(function(x) { x.classList.remove('active'); });
-          if (b.getAttribute('data-brush') === brushMode && b.classList.contains('active')) {
-            brushMode = null; // 取消笔刷
+          if (b.getAttribute('data-brush') === brushMode) {
+            deactivate(); // 再次点击取消
           } else {
+            brushBtns.forEach(function(x) { x.classList.remove('active'); });
             b.classList.add('active');
             brushMode = b.getAttribute('data-brush');
+            // 激活笔刷时取消贴纸选中
+            if (typeof StickerEngine !== 'undefined' && StickerEngine.clearSelection) StickerEngine.clearSelection();
           }
           WindowManager.setStatus(brushMode ? '🖌 笔刷模式：' + (brushMode === 'marker' ? '荧光笔' : '粉笔') : '🖌 笔刷已取消');
         });
@@ -4595,7 +4604,7 @@
         if (brushStrokes.length > 0 || currentStroke) renderBrushStrokes();
       };
 
-      return { renderBrushOnComposite: renderBrushOnComposite };
+      return { renderBrushOnComposite: renderBrushOnComposite, deactivate: deactivate };
     })();
 
     // 集成涂鸦到导出
