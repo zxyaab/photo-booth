@@ -826,6 +826,8 @@
       padding: 6px;
       background: #ECE9D8;
       border-right: 1px solid #ACA899;
+      overflow-y: auto;
+      max-height: 100%;
     }
     .content-right {
       flex: 1;
@@ -836,7 +838,8 @@
       background: #ECE9D8;
       border: none;
       min-height: 300px;
-      position: relative;
+      position: sticky;
+      top: 0;
       overflow: hidden;
     }
     .content-right .preview-placeholder {
@@ -2209,16 +2212,17 @@
 
       console.log('✅ 第 3 步完成：桌面图标 + 回收站趣味弹窗 + 快捷启动');
 
-    // 标签页切换
+    // 标签页切换（只操作内容区 section，排除标签按钮本身）
     (function() {
       var tabs = document.querySelectorAll('.panel-tab');
-      var sections = document.querySelectorAll('[data-tab]');
+      var sections = document.querySelectorAll('.template-section[data-tab], .filter-section[data-tab]');
       function showTab(name) {
         tabs.forEach(function(t) { t.classList.toggle('active', t.getAttribute('data-tab') === name); });
         sections.forEach(function(s) { s.style.display = (s.getAttribute('data-tab') === name) ? '' : 'none'; });
       }
       tabs.forEach(function(tab) { tab.addEventListener('click', function() { showTab(this.getAttribute('data-tab')); }); });
-      showTab('template');
+      // 默认显示模板标签
+      setTimeout(function() { showTab('template'); }, 100);
     })();
 
     // ===== Hash 路由 =====
