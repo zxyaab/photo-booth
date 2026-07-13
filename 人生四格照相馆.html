@@ -3401,7 +3401,7 @@
         // 防抖 100ms
         if (debounceTimer) clearTimeout(debounceTimer);
         debounceTimer = setTimeout(function() {
-          var compositeCanvas = composite();
+          var compositeCanvas = getCompositeCanvas();
           // 缩放到预览区
           var previewW = previewArea.clientWidth - 20;
           var previewH = previewArea.clientHeight - 20;
@@ -4072,50 +4072,7 @@
     // 滤镜 + 修图 + 贴纸通过后续的 EditEngine 和 StickerEngine 钩子统一集成到 getCompositeCanvas
     // 此处不再单独包装，避免双重滤镜
 
-    // 正确的集成方式：在 TemplateEngine 的 updatePreview 中，
-    // 合成的 canvas 自动经过 FilterEngine.applyFilter
-    // 我们重写 TemplateEngine 的内部 composite 调用
-    (function() {
-      // TemplateEngine.updatePreview 内部使用 debounce → composite()
-      // composite() 返回 raw canvas
-      // 我们不需要改 updatePreview，因为 init 时 getCompositeCanvas 已经被 hook
-      // updatePreview 用的是内部的 composite()，不是 getCompositeCanvas()
-      // 所以需要另外的集成方式 —— 在 updatePreview 的 debounce 回调中加滤镜
-
-      // 最简方式：直接在 TemplateEngine 初始化后 patch 它调用的 composite
-      // 因为 updatePreview 内部 setTimeout 调用了 composite() 然后渲染到 previewCanvas
-      // 我们需要让它渲染滤镜后的结果
-
-      // 用 MutationObserver 或直接 patch：由于 updatePreview 是一个不能直接修改的闭包，
-      // 我们改用轮询方式：用一个定时器在 updatePreview 之后自动应用滤镜
-
-      // 实际上，最简单的方法是让 FilterEngine 在每次预览更新后被调用。
-      // 我们创建一个包装后的 updatePreview：
-
-      var previewCanvas = document.getElementById('preview-canvas');
-      var previewArea = document.getElementById('preview-area');
-
-      // Hook: 替换 previewCanvas 的渲染
-      var origUpdatePreview = TemplateEngine.updatePreview;
-      TemplateEngine.updatePreview = function() {
-        origUpdatePreview();
-        // 在原始更新完成后，对预览 canvas 应用滤镜
-        setTimeout(function() {
-          if (previewCanvas.style.display === 'none') return;
-          var currentPreview = document.createElement('canvas');
-          currentPreview.width = previewCanvas.width;
-          currentPreview.height = previewCanvas.height;
-          var ctx = currentPreview.getContext('2d');
-          ctx.drawImage(previewCanvas, 0, 0);
-
-          var filtered = FilterEngine.applyFilter(currentPreview);
-          previewCanvas.width = filtered.width;
-          previewCanvas.height = filtered.height;
-          var pctx = previewCanvas.getContext('2d');
-          pctx.drawImage(filtered, 0, 0);
-        }, 150); // 等待原始 debounce 完成（100ms）+ 缓冲
-      };
-    })();
+    // 预览通过 getCompositeCanvas 统一走完整管线（滤镜+修图+美颜+贴纸+笔刷）
 
     console.log('✅ 第 8 步完成：滤镜系统（16个滤镜 + 强度调节）');
 
@@ -4459,12 +4416,7 @@
       // 供外部检查是否在拖拽
       function isDragging() { return draggingIdx >= 0; }
 
-      // Hook: 贴纸渲染挂钩预览更新
-      var origUpdatePreview = TemplateEngine.updatePreview;
-      TemplateEngine.updatePreview = function() {
-        origUpdatePreview();
-        if (stickers.length > 0) renderStickersOnPreview();
-      };
+      // 贴纸通过 getCompositeCanvas 统一渲染，无需单独 hook 预览
 
       return {
         renderStickersOnComposite: renderStickersOnComposite,
@@ -4617,12 +4569,7 @@
         return canvas;
       }
 
-      // hook 预览更新
-      var origUP = TemplateEngine.updatePreview;
-      TemplateEngine.updatePreview = function() {
-        origUP();
-        if (brushStrokes.length > 0 || currentStroke) renderBrushStrokes();
-      };
+      // 笔刷在 getCompositeCanvas 中统一渲染，无需单独 hook 预览
 
       return { renderBrushOnComposite: renderBrushOnComposite, deactivate: deactivate };
     })();
