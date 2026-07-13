@@ -717,6 +717,18 @@
 
     /* ===== 第 5 步：窗口内部重构 ===== */
 
+    /* 标签页 */
+    .panel-tab {
+      padding: 3px 10px; font-size: 11px; cursor: pointer;
+      border: 2px solid transparent; border-bottom: none;
+      background: #D4D0C8; font-family: '宋体','SimSun',serif;
+      color: #000; margin-right: 1px;
+    }
+    .panel-tab:hover { background: #E8E4D8; }
+    .panel-tab.active { background: #ECE9D8; border-color: #ACA899 #ACA899 #ECE9D8 #ACA899; position: relative; top: 1px; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
     /* 素材区 */
     .section-title {
       font-size: 12px;
@@ -806,7 +818,7 @@
       border: 1px solid #ACA899;
     }
     .content-left {
-      width: 220px;
+      width: 260px;
       flex-shrink: 0;
       display: flex;
       flex-direction: column;
@@ -814,6 +826,8 @@
       padding: 6px;
       background: #ECE9D8;
       border-right: 1px solid #ACA899;
+      overflow-y: auto;
+      max-height: 100%;
     }
     .content-right {
       flex: 1;
@@ -824,7 +838,8 @@
       background: #ECE9D8;
       border: none;
       min-height: 300px;
-      position: relative;
+      position: sticky;
+      top: 0;
       overflow: hidden;
     }
     .content-right .preview-placeholder {
@@ -1361,6 +1376,13 @@
       <div class="content-columns">
         <!-- 左侧面板 -->
         <div class="content-left">
+          <!-- 标签页切换 -->
+          <div style="display:flex;gap:0;margin-bottom:4px;border-bottom:1px solid #ACA899;">
+            <button class="panel-tab active" data-tab="template">🪟 模板</button>
+            <button class="panel-tab" data-tab="filter">🎨 滤镜</button>
+            <button class="panel-tab" data-tab="edit">✂️ 修图</button>
+            <button class="panel-tab" data-tab="sticker">🌟 贴纸</button>
+          </div>
           <!-- 素材区 -->
           <div>
             <div class="section-title">📷 素材区（点击或拖拽导入）</div>
@@ -1379,7 +1401,7 @@
           </div>
           <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp" multiple hidden>
           <!-- 模板选择区 -->
-          <div class="template-section">
+          <div class="template-section" data-tab="template">
             <div class="section-title">🪟 四格模板</div>
             <div class="filter-group-label" style="font-size:10px;color:#808080;">基础款</div>
             <div class="template-grid" id="template-grid">
@@ -1413,7 +1435,7 @@
             </div>
           </div>
           <!-- 边框选择区 -->
-          <div class="template-section">
+          <div class="template-section" data-tab="template">
             <div class="section-title">🖼 边框样式</div>
             <div class="border-options" id="border-options">
               <span class="border-opt selected" data-border="film">🎞 黑胶片</span>
@@ -1424,7 +1446,7 @@
             </div>
           </div>
           <!-- 拍立得模板 -->
-          <div class="template-section">
+          <div class="template-section" data-tab="template">
             <div class="section-title">📸 拍立得模板</div>
             <div class="template-grid" id="template-grid-polaroid">
               <div class="template-card" data-template="polaroid">
@@ -1467,7 +1489,7 @@
           </div>
 
           <!-- 模板附加效果 -->
-          <div class="template-section">
+          <div class="template-section" data-tab="template">
             <div class="section-title">✨ 附加效果</div>
             <div class="filter-options" id="template-fx">
               <button class="filter-btn" data-tfx="none" style="font-size:9px;">🚫 无</button>
@@ -1478,7 +1500,7 @@
           </div>
 
           <!-- 参数调节 -->
-          <div class="template-section">
+          <div class="template-section" data-tab="template">
             <div class="section-title">⚙ 参数调节</div>
             <div class="slider-row">
               <span>间距</span>
@@ -1492,7 +1514,7 @@
             </div>
           </div>
           <!-- 修图工具区 -->
-          <div class="filter-section">
+          <div class="filter-section" data-tab="edit">
             <div class="section-title">✂️ 修图工具</div>
             <div class="slider-row"><span>亮度</span><input type="range" id="edit-brightness" min="-50" max="50" value="0"><span id="brightness-val">0</span></div>
             <div class="slider-row"><span>对比度</span><input type="range" id="edit-contrast" min="-50" max="50" value="0"><span id="contrast-val">0</span></div>
@@ -1509,7 +1531,7 @@
           </div>
 
           <!-- 涂鸦笔刷 -->
-          <div class="filter-section">
+          <div class="filter-section" data-tab="edit">
             <div class="section-title">🖌 涂鸦笔刷</div>
             <div style="display:flex;gap:3px;align-items:center;margin-bottom:3px;">
               <button class="xp-btn brush-btn active" data-brush="marker" style="font-size:9px;min-width:40px;height:20px;">🖍荧光</button>
@@ -1520,7 +1542,7 @@
           </div>
 
           <!-- 美颜 -->
-          <div class="filter-section">
+          <div class="filter-section" data-tab="edit">
             <div class="section-title">💆 复古美颜</div>
             <div class="filter-options">
               <button class="filter-btn beauty-btn" data-beauty="smooth">✨ 磨皮</button>
@@ -1531,7 +1553,7 @@
           </div>
 
           <!-- 贴纸库 -->
-          <div class="filter-section">
+          <div class="filter-section" data-tab="sticker">
             <div class="section-title">🌟 像素贴纸 <span style="font-weight:normal;font-size:10px;">(点击贴纸→点击预览区放置)</span></div>
             <div class="filter-options" id="sticker-palette" style="gap:2px;">
               <button class="sticker-btn" data-emoji="❤️">❤️</button>
@@ -1558,7 +1580,7 @@
           </div>
 
           <!-- 滤镜选择区 -->
-          <div class="filter-section">
+          <div class="filter-section" data-tab="filter">
             <div class="section-title">🎨 复古滤镜</div>
             <div class="filter-group-label">📹 XP老数码</div>
             <div class="filter-options" id="filter-group-xp">
@@ -1650,6 +1672,62 @@
   <script>
     // ===== XP复古人生四格照相馆 — 主脚本 =====
     'use strict';
+
+    // ===== 全局状态管理层 =====
+    var AppState = (function() {
+      var state = {
+        // 模板
+        template: 'grid22',
+        border: 'film',
+        gap: 6,
+        radius: 4,
+        // 滤镜
+        filter: 'none',
+        filterStrength: 70,
+        // 修图
+        brightness: 0, contrast: 0, saturation: 0, warmth: 0,
+        sharpen: 0, blur: 0,
+        rotateAngle: 0, flipH: false, flipV: false,
+        // 美颜
+        beauty: 'none',
+        // 模板特效
+        templateFX: 'none',
+        // 贴纸
+        stickers: [],
+        // 涂鸦
+        brushStrokes: [],
+        // 素材
+        assets: [null, null, null, null],
+        assetCount: 0,
+        // 草稿
+        draftSaved: false,
+        // 路由
+        route: 'create'
+      };
+      var listeners = [];
+
+      function get(key) { return state[key]; }
+      function set(key, value) {
+        var old = state[key];
+        state[key] = value;
+        if (old !== value) notify(key, value, old);
+      }
+      function getAll() { return state; }
+      function onChange(fn) { listeners.push(fn); }
+      function notify(key, newVal, oldVal) {
+        listeners.forEach(function(fn) { try { fn(key, newVal, oldVal); } catch(e) {} });
+      }
+
+      // 订阅预览更新
+      onChange(function(key) {
+        var previewKeys = ['template','border','gap','radius','filter','filterStrength','brightness','contrast','saturation','warmth','sharpen','blur','rotateAngle','flipH','flipV','beauty','templateFX','stickers','brushStrokes'];
+        if (previewKeys.indexOf(key) >= 0) {
+          if (typeof TemplateEngine !== 'undefined') TemplateEngine.updatePreview();
+        }
+      });
+
+      return { get: get, set: set, getAll: getAll, onChange: onChange };
+    })();
 
     // ===== 写实壁纸绘制（Canvas） =====
     (function() {
@@ -1834,6 +1912,105 @@
     }
     updateClock();
     setInterval(updateClock, 30000);
+
+    // ===== 草稿会话管理 =====
+    var DraftSession = (function() {
+      var DRAFT_KEY = 'photobooth_draft';
+      var autoSaveTimer = null;
+
+      function save() {
+        try {
+          var assets = AppState.get('assets');
+          var draft = {
+            assets: assets.map(function(a) { return a ? { src: a.src, name: a.name || '' } : null; }),
+            template: AppState.get('template'),
+            border: AppState.get('border'),
+            gap: AppState.get('gap'),
+            radius: AppState.get('radius'),
+            filter: AppState.get('filter'),
+            filterStrength: AppState.get('filterStrength'),
+            brightness: AppState.get('brightness'),
+            contrast: AppState.get('contrast'),
+            saturation: AppState.get('saturation'),
+            warmth: AppState.get('warmth'),
+            stickers: AppState.get('stickers'),
+            savedAt: Date.now()
+          };
+          localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+          AppState.set('draftSaved', true);
+        } catch(e) {}
+      }
+
+      function load() {
+        try {
+          var raw = localStorage.getItem(DRAFT_KEY);
+          if (!raw) return null;
+          return JSON.parse(raw);
+        } catch(e) { return null; }
+      }
+
+      function restore(draft) {
+        if (!draft || !draft.assets) return false;
+        // 恢复素材
+        var restored = 0;
+        draft.assets.forEach(function(a, i) {
+          if (a && a.src) {
+            var img = new Image();
+            img.onload = function() {
+              if (typeof AssetManager !== 'undefined') AssetManager.addImage(img, i);
+            };
+            img.src = a.src;
+            restored++;
+          }
+        });
+        // 恢复参数
+        if (draft.template) AppState.set('template', draft.template);
+        if (draft.border) AppState.set('border', draft.border);
+        if (draft.gap !== undefined) AppState.set('gap', draft.gap);
+        if (draft.radius !== undefined) AppState.set('radius', draft.radius);
+        if (draft.filter) {
+          // 更新 FilterEngine 的当前滤镜
+          AppState.set('filter', draft.filter);
+        }
+        if (draft.filterStrength) AppState.set('filterStrength', draft.filterStrength);
+        if (draft.stickers) AppState.set('stickers', draft.stickers);
+        WindowManager.setStatus('📝 已恢复未完成的作品');
+        return true;
+      }
+
+      function clear() {
+        localStorage.removeItem(DRAFT_KEY);
+        AppState.set('draftSaved', false);
+      }
+
+      // 自动保存：每 10 秒检查一次
+      setInterval(function() {
+        var count = AppState.get('assetCount');
+        if (count > 0) save();
+      }, 10000);
+
+      // 页面离开时保存
+      window.addEventListener('beforeunload', function() {
+        if (AppState.get('assetCount') > 0) save();
+      });
+
+      // 启动时检测草稿
+      var existing = load();
+      if (existing && existing.savedAt) {
+        var age = Date.now() - existing.savedAt;
+        if (age < 24 * 60 * 60 * 1000) {
+          setTimeout(function() {
+            if (confirm('📝 检测到未完成的作品（' + new Date(existing.savedAt).toLocaleString() + '）\n\n是否恢复继续编辑？')) {
+              restore(existing);
+            } else {
+              clear();
+            }
+          }, 800);
+        }
+      }
+
+      return { save: save, load: load, restore: restore, clear: clear };
+    })();
 
     // 开始按钮菜单
     (function() {
@@ -2042,6 +2219,40 @@
       });
 
       console.log('✅ 第 3 步完成：桌面图标 + 回收站趣味弹窗 + 快捷启动');
+
+    // 标签页切换（只操作内容区 section，排除标签按钮本身）
+    (function() {
+      var tabs = document.querySelectorAll('.panel-tab');
+      var sections = document.querySelectorAll('.template-section[data-tab], .filter-section[data-tab]');
+      function showTab(name) {
+        tabs.forEach(function(t) { t.classList.toggle('active', t.getAttribute('data-tab') === name); });
+        sections.forEach(function(s) { s.style.display = (s.getAttribute('data-tab') === name) ? '' : 'none'; });
+      }
+      tabs.forEach(function(tab) { tab.addEventListener('click', function() { showTab(this.getAttribute('data-tab')); }); });
+      // 默认显示模板标签
+      setTimeout(function() { showTab('template'); }, 100);
+    })();
+
+    // ===== Hash 路由 =====
+    (function() {
+      function handleRoute() {
+        var hash = window.location.hash || '#create';
+        AppState.set('route', hash.replace('#', ''));
+        // 路由逻辑：创作页 vs 相册页
+        if (hash === '#album') {
+          if (window.AlbumViewer) window.AlbumViewer.open();
+        }
+      }
+      window.addEventListener('hashchange', handleRoute);
+      handleRoute();
+      // 初始路由
+      if (!window.location.hash) {
+        window.location.hash = '#create';
+      }
+    })();
+
+    console.log('✅ Hash 路由：创作页/相册页');
+    console.log('✅ 第 3 步完成：桌面图标 + 回收站趣味弹窗 + 快捷启动');
 
     // ===== 桌面数码小狗互动（升级版） =====
     (function() {
@@ -2367,9 +2578,10 @@
     console.log('✅ 第 4 步完成：可拖拽、缩放、最小化/最大化/关闭的 XP 主窗口');
     console.log('⏳ 执行第 5 步：本地上传图片...');
 
-    // ===== 第 5 步：素材管理（本地上传 + 拖拽导入） =====
+    // ===== 第 5 步：素材管理（四格独立对象 + 拖拽导入） =====
     var AssetManager = (function() {
-      var assets = [null, null, null, null]; // 4个素材位
+      var assets = [null, null, null, null]; // 四个独立 Image 对象
+      AppState.set('assets', assets);
       var slotElements = [];
       var previewCanvas = document.getElementById('preview-canvas');
       var previewCtx = previewCanvas.getContext('2d');
@@ -2385,6 +2597,9 @@
       function updateStatus() {
         var count = assets.filter(function(a) { return a !== null; }).length;
         if (statusBar) statusBar.textContent = '📷 素材: ' + count + ' / 4 张';
+        AppState.set('assets', assets);
+        AppState.set('assetCount', count);
+        DraftSession.save(); // 自动草稿保存
       }
 
       function loadImage(file, slotIndex) {
@@ -3062,9 +3277,19 @@
         offCanvas.height = size.h;
         var offCtx = offCanvas.getContext('2d');
 
-        // 背景色（边框颜色 → 填充间隙和边距）
-        // 特殊边框处理
-        if (currentBorder === 'silver') {
+        // 拍立得模板使用自带配色（覆盖边框选择）
+        if (currentTemplate === 'polaroid') {
+          offCtx.fillStyle = '#FAFAFA'; offCtx.fillRect(0, 0, size.w, size.h);
+        } else if (currentTemplate === 'polaroid-brown') {
+          offCtx.fillStyle = '#E8DCC8'; offCtx.fillRect(0, 0, size.w, size.h);
+        } else if (currentTemplate === 'polaroid-rainbow') {
+          var pg = offCtx.createLinearGradient(0, 0, size.w, size.h);
+          pg.addColorStop(0, '#A855F7'); pg.addColorStop(0.5, '#EC4899'); pg.addColorStop(1, '#2DD4BF');
+          offCtx.fillStyle = pg; offCtx.fillRect(0, 0, size.w, size.h);
+        } else if (currentTemplate === 'polaroid-mini') {
+          offCtx.fillStyle = '#FFFFFF'; offCtx.fillRect(0, 0, size.w, size.h);
+        // 普通模板使用边框选择
+        } else if (currentBorder === 'silver') {
           var grad = offCtx.createLinearGradient(0, 0, size.w, size.h);
           grad.addColorStop(0, '#C0C0C0'); grad.addColorStop(0.3, '#E8E8E8'); grad.addColorStop(0.6, '#A0A0A0'); grad.addColorStop(1, '#D0D0D0');
           offCtx.fillStyle = grad;
@@ -3177,6 +3402,12 @@
         if (debounceTimer) clearTimeout(debounceTimer);
         debounceTimer = setTimeout(function() {
           var compositeCanvas = composite();
+          // 显式走完整管线（滤镜→修图→美颜→贴纸→笔刷）
+          compositeCanvas = FilterEngine.applyFilter(compositeCanvas);
+          compositeCanvas = EditEngine.applyEdits(compositeCanvas);
+          compositeCanvas = BeautyEngine.applyBeauty(compositeCanvas);
+          compositeCanvas = StickerEngine.renderStickersOnComposite(compositeCanvas);
+          compositeCanvas = BrushEngine.renderBrushOnComposite(compositeCanvas);
           // 缩放到预览区
           var previewW = previewArea.clientWidth - 20;
           var previewH = previewArea.clientHeight - 20;
@@ -3199,11 +3430,11 @@
 
       // ===== 事件绑定 =====
 
-      // 模板卡片切换
-      var templateCards = document.querySelectorAll('#template-grid .template-card');
-      templateCards.forEach(function(card) {
+      // 模板卡片切换（包含基础+创意+拍立得全部模板卡片）
+      var allTemplateCards = document.querySelectorAll('.template-card[data-template]');
+      allTemplateCards.forEach(function(card) {
         card.addEventListener('click', function() {
-          templateCards.forEach(function(c) { c.classList.remove('selected'); });
+          allTemplateCards.forEach(function(c) { c.classList.remove('selected'); });
           card.classList.add('selected');
           currentTemplate = card.getAttribute('data-template');
           updatePreview();
@@ -3810,8 +4041,8 @@
 
       // ===== 事件绑定 =====
 
-      // 滤镜按钮点击
-      var allFilterBtns = document.querySelectorAll('.filter-btn');
+      // 滤镜按钮点击（只选滤镜区的按钮，排除美颜/模板特效）
+      var allFilterBtns = document.querySelectorAll('#filter-group-xp .filter-btn, #filter-group-y2k .filter-btn, #filter-group-fresh .filter-btn, #filter-group-fx .filter-btn');
       allFilterBtns.forEach(function(btn) {
         btn.addEventListener('click', function() {
           // 同组内移除选中状态
@@ -3847,50 +4078,7 @@
     // 滤镜 + 修图 + 贴纸通过后续的 EditEngine 和 StickerEngine 钩子统一集成到 getCompositeCanvas
     // 此处不再单独包装，避免双重滤镜
 
-    // 正确的集成方式：在 TemplateEngine 的 updatePreview 中，
-    // 合成的 canvas 自动经过 FilterEngine.applyFilter
-    // 我们重写 TemplateEngine 的内部 composite 调用
-    (function() {
-      // TemplateEngine.updatePreview 内部使用 debounce → composite()
-      // composite() 返回 raw canvas
-      // 我们不需要改 updatePreview，因为 init 时 getCompositeCanvas 已经被 hook
-      // updatePreview 用的是内部的 composite()，不是 getCompositeCanvas()
-      // 所以需要另外的集成方式 —— 在 updatePreview 的 debounce 回调中加滤镜
-
-      // 最简方式：直接在 TemplateEngine 初始化后 patch 它调用的 composite
-      // 因为 updatePreview 内部 setTimeout 调用了 composite() 然后渲染到 previewCanvas
-      // 我们需要让它渲染滤镜后的结果
-
-      // 用 MutationObserver 或直接 patch：由于 updatePreview 是一个不能直接修改的闭包，
-      // 我们改用轮询方式：用一个定时器在 updatePreview 之后自动应用滤镜
-
-      // 实际上，最简单的方法是让 FilterEngine 在每次预览更新后被调用。
-      // 我们创建一个包装后的 updatePreview：
-
-      var previewCanvas = document.getElementById('preview-canvas');
-      var previewArea = document.getElementById('preview-area');
-
-      // Hook: 替换 previewCanvas 的渲染
-      var origUpdatePreview = TemplateEngine.updatePreview;
-      TemplateEngine.updatePreview = function() {
-        origUpdatePreview();
-        // 在原始更新完成后，对预览 canvas 应用滤镜
-        setTimeout(function() {
-          if (previewCanvas.style.display === 'none') return;
-          var currentPreview = document.createElement('canvas');
-          currentPreview.width = previewCanvas.width;
-          currentPreview.height = previewCanvas.height;
-          var ctx = currentPreview.getContext('2d');
-          ctx.drawImage(previewCanvas, 0, 0);
-
-          var filtered = FilterEngine.applyFilter(currentPreview);
-          previewCanvas.width = filtered.width;
-          previewCanvas.height = filtered.height;
-          var pctx = previewCanvas.getContext('2d');
-          pctx.drawImage(filtered, 0, 0);
-        }, 150); // 等待原始 debounce 完成（100ms）+ 缓冲
-      };
-    })();
+    // 预览通过 getCompositeCanvas 统一走完整管线（滤镜+修图+美颜+贴纸+笔刷）
 
     console.log('✅ 第 8 步完成：滤镜系统（16个滤镜 + 强度调节）');
 
@@ -3906,18 +4094,19 @@
         if (rotateAngle !== 0 || flipH || flipV) {
           var tfCanvas = document.createElement('canvas');
           var sw = processed.width, sh = processed.height;
+          // 90/270 度旋转时宽高互换
           if (rotateAngle === 90 || rotateAngle === 270) {
             tfCanvas.width = sh; tfCanvas.height = sw;
           } else {
             tfCanvas.width = sw; tfCanvas.height = sh;
           }
           var tfCtx = tfCanvas.getContext('2d');
-          tfCtx.save();
+          // 直接设置变换矩阵：先平移到中心，旋转，翻转，再平移回来
           tfCtx.translate(tfCanvas.width / 2, tfCanvas.height / 2);
-          tfCtx.rotate(rotateAngle * Math.PI / 180);
-          tfCtx.scale(flipH ? -1 : 1, flipV ? -1 : 1);
-          tfCtx.drawImage(processed, -sw / 2, -sh / 2);
-          tfCtx.restore();
+          if (rotateAngle !== 0) tfCtx.rotate(rotateAngle * Math.PI / 180);
+          if (flipH || flipV) tfCtx.scale(flipH ? -1 : 1, flipV ? -1 : 1);
+          tfCtx.drawImage(processed, -sw / 2, -sh / 2, sw, sh);
+          tfCtx.setTransform(1, 0, 0, 1, 0, 0);
           processed = tfCanvas;
         }
         // 再应用模糊
@@ -3926,7 +4115,7 @@
           blurCanvas.width = sourceCanvas.width; blurCanvas.height = sourceCanvas.height;
           var blurCtx = blurCanvas.getContext('2d');
           blurCtx.filter = 'blur(' + (blur * 0.8) + 'px)';
-          blurCtx.drawImage(sourceCanvas, 0, 0);
+          blurCtx.drawImage(processed, 0, 0);
           blurCtx.filter = 'none';
           processed = blurCanvas;
         }
@@ -4088,7 +4277,9 @@
         return emoji && emoji.length > 2; // 如 "💜LOVE"
       }
       function getArtText(emoji) {
-        return emoji.replace(/[^\w一-鿿]/g, '').replace(/^./, ''); // 去掉首个 emoji
+        // 艺术字格式：💜LOVE → 从第一个 ASCII 字母开始提取
+        var m = emoji.match(/[A-Za-z0-9]/);
+        return m ? emoji.slice(m.index) : emoji;
       }
 
       // 贴纸按钮点击
@@ -4099,6 +4290,8 @@
           btn.classList.add('selected');
           selectedEmoji = btn.getAttribute('data-emoji');
           draggingIdx = -1;
+          // 选中贴纸时取消笔刷模式
+          if (typeof BrushEngine !== 'undefined' && BrushEngine.deactivate) BrushEngine.deactivate();
           WindowManager.setStatus('🌟 已选贴纸，点击预览区放置');
         });
       });
@@ -4225,16 +4418,18 @@
         WindowManager.setStatus('🌟 贴纸已清除');
       });
 
-      // Hook: 贴纸渲染挂钩预览更新
-      var origUpdatePreview = TemplateEngine.updatePreview;
-      TemplateEngine.updatePreview = function() {
-        origUpdatePreview();
-        if (stickers.length > 0) renderStickersOnPreview();
-      };
+      // 供外部检查是否有选中贴纸
+      function hasSelection() { return selectedEmoji !== null; }
+      // 供外部检查是否在拖拽
+      function isDragging() { return draggingIdx >= 0; }
+
+      // 贴纸通过 getCompositeCanvas 统一渲染，无需单独 hook 预览
 
       return {
         renderStickersOnComposite: renderStickersOnComposite,
-        getStickers: function() { return stickers; }
+        getStickers: function() { return stickers; },
+        hasSelection: hasSelection, isDragging: isDragging,
+        clearSelection: function() { selectedEmoji = null; stickerBtns.forEach(function(b) { b.classList.remove('selected'); }); }
       };
     })();
 
@@ -4263,14 +4458,20 @@
 
       // 笔刷按钮
       var brushBtns = document.querySelectorAll('.brush-btn');
+      function deactivate() {
+        brushMode = null;
+        brushBtns.forEach(function(x) { x.classList.remove('active'); });
+      }
       brushBtns.forEach(function(b) {
         b.addEventListener('click', function() {
-          brushBtns.forEach(function(x) { x.classList.remove('active'); });
-          if (b.getAttribute('data-brush') === brushMode && b.classList.contains('active')) {
-            brushMode = null; // 取消笔刷
+          if (b.getAttribute('data-brush') === brushMode) {
+            deactivate(); // 再次点击取消
           } else {
+            brushBtns.forEach(function(x) { x.classList.remove('active'); });
             b.classList.add('active');
             brushMode = b.getAttribute('data-brush');
+            // 激活笔刷时取消贴纸选中
+            if (typeof StickerEngine !== 'undefined' && StickerEngine.clearSelection) StickerEngine.clearSelection();
           }
           WindowManager.setStatus(brushMode ? '🖌 笔刷模式：' + (brushMode === 'marker' ? '荧光笔' : '粉笔') : '🖌 笔刷已取消');
         });
@@ -4287,10 +4488,12 @@
         TemplateEngine.updatePreview();
       });
 
-      // 在预览区上绘画
+      // 在预览区上绘画（只在笔刷激活且无贴纸选中时）
       if (previewArea) {
         previewArea.addEventListener('mousedown', function(e) {
           if (!brushMode) return;
+          // 如果贴纸被选中，不绘画
+          if (typeof StickerEngine !== 'undefined' && StickerEngine.hasSelection && StickerEngine.hasSelection()) return;
           isDrawing = true;
           var rect = previewArea.getBoundingClientRect();
           currentStroke = {
@@ -4373,14 +4576,9 @@
         return canvas;
       }
 
-      // hook 预览更新
-      var origUP = TemplateEngine.updatePreview;
-      TemplateEngine.updatePreview = function() {
-        origUP();
-        if (brushStrokes.length > 0 || currentStroke) renderBrushStrokes();
-      };
+      // 笔刷在 getCompositeCanvas 中统一渲染，无需单独 hook 预览
 
-      return { renderBrushOnComposite: renderBrushOnComposite };
+      return { renderBrushOnComposite: renderBrushOnComposite, deactivate: deactivate };
     })();
 
     // 集成涂鸦到导出
