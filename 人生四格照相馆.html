@@ -1390,7 +1390,7 @@
           </div>
           <input type="file" id="file-input" accept="image/jpeg,image/png,image/webp" multiple hidden>
           <!-- 模板选择区 -->
-          <div class="template-section">
+          <div class="template-section" data-tab="template">
             <div class="section-title">🪟 四格模板</div>
             <div class="filter-group-label" style="font-size:10px;color:#808080;">基础款</div>
             <div class="template-grid" id="template-grid">
@@ -1424,7 +1424,7 @@
             </div>
           </div>
           <!-- 边框选择区 -->
-          <div class="template-section">
+          <div class="template-section" data-tab="template">
             <div class="section-title">🖼 边框样式</div>
             <div class="border-options" id="border-options">
               <span class="border-opt selected" data-border="film">🎞 黑胶片</span>
@@ -1435,7 +1435,7 @@
             </div>
           </div>
           <!-- 拍立得模板 -->
-          <div class="template-section">
+          <div class="template-section" data-tab="template">
             <div class="section-title">📸 拍立得模板</div>
             <div class="template-grid" id="template-grid-polaroid">
               <div class="template-card" data-template="polaroid">
@@ -1478,7 +1478,7 @@
           </div>
 
           <!-- 模板附加效果 -->
-          <div class="template-section">
+          <div class="template-section" data-tab="template">
             <div class="section-title">✨ 附加效果</div>
             <div class="filter-options" id="template-fx">
               <button class="filter-btn" data-tfx="none" style="font-size:9px;">🚫 无</button>
@@ -1489,7 +1489,7 @@
           </div>
 
           <!-- 参数调节 -->
-          <div class="template-section">
+          <div class="template-section" data-tab="template">
             <div class="section-title">⚙ 参数调节</div>
             <div class="slider-row">
               <span>间距</span>
@@ -1503,7 +1503,7 @@
             </div>
           </div>
           <!-- 修图工具区 -->
-          <div class="filter-section">
+          <div class="filter-section" data-tab="edit">
             <div class="section-title">✂️ 修图工具</div>
             <div class="slider-row"><span>亮度</span><input type="range" id="edit-brightness" min="-50" max="50" value="0"><span id="brightness-val">0</span></div>
             <div class="slider-row"><span>对比度</span><input type="range" id="edit-contrast" min="-50" max="50" value="0"><span id="contrast-val">0</span></div>
@@ -1520,7 +1520,7 @@
           </div>
 
           <!-- 涂鸦笔刷 -->
-          <div class="filter-section">
+          <div class="filter-section" data-tab="edit">
             <div class="section-title">🖌 涂鸦笔刷</div>
             <div style="display:flex;gap:3px;align-items:center;margin-bottom:3px;">
               <button class="xp-btn brush-btn active" data-brush="marker" style="font-size:9px;min-width:40px;height:20px;">🖍荧光</button>
@@ -1531,7 +1531,7 @@
           </div>
 
           <!-- 美颜 -->
-          <div class="filter-section">
+          <div class="filter-section" data-tab="edit">
             <div class="section-title">💆 复古美颜</div>
             <div class="filter-options">
               <button class="filter-btn beauty-btn" data-beauty="smooth">✨ 磨皮</button>
@@ -1542,7 +1542,7 @@
           </div>
 
           <!-- 贴纸库 -->
-          <div class="filter-section">
+          <div class="filter-section" data-tab="sticker">
             <div class="section-title">🌟 像素贴纸 <span style="font-weight:normal;font-size:10px;">(点击贴纸→点击预览区放置)</span></div>
             <div class="filter-options" id="sticker-palette" style="gap:2px;">
               <button class="sticker-btn" data-emoji="❤️">❤️</button>
@@ -1569,7 +1569,7 @@
           </div>
 
           <!-- 滤镜选择区 -->
-          <div class="filter-section">
+          <div class="filter-section" data-tab="filter">
             <div class="section-title">🎨 复古滤镜</div>
             <div class="filter-group-label">📹 XP老数码</div>
             <div class="filter-options" id="filter-group-xp">
@@ -2212,16 +2212,13 @@
     // 标签页切换
     (function() {
       var tabs = document.querySelectorAll('.panel-tab');
-      tabs.forEach(function(tab) {
-        tab.addEventListener('click', function() {
-          var tn = this.getAttribute('data-tab');
-          tabs.forEach(function(t) { t.classList.remove('active'); });
-          this.classList.add('active');
-          document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.remove('active'); });
-          var panel = document.getElementById('tab-' + tn);
-          if (panel) panel.classList.add('active');
-        });
-      });
+      var sections = document.querySelectorAll('[data-tab]');
+      function showTab(name) {
+        tabs.forEach(function(t) { t.classList.toggle('active', t.getAttribute('data-tab') === name); });
+        sections.forEach(function(s) { s.style.display = (s.getAttribute('data-tab') === name) ? '' : 'none'; });
+      }
+      tabs.forEach(function(tab) { tab.addEventListener('click', function() { showTab(this.getAttribute('data-tab')); }); });
+      showTab('template');
     })();
 
     // ===== Hash 路由 =====
@@ -3405,11 +3402,11 @@
 
       // ===== 事件绑定 =====
 
-      // 模板卡片切换
-      var templateCards = document.querySelectorAll('#template-grid .template-card');
-      templateCards.forEach(function(card) {
+      // 模板卡片切换（包含基础+创意+拍立得全部模板卡片）
+      var allTemplateCards = document.querySelectorAll('.template-card[data-template]');
+      allTemplateCards.forEach(function(card) {
         card.addEventListener('click', function() {
-          templateCards.forEach(function(c) { c.classList.remove('selected'); });
+          allTemplateCards.forEach(function(c) { c.classList.remove('selected'); });
           card.classList.add('selected');
           currentTemplate = card.getAttribute('data-template');
           updatePreview();
@@ -4431,6 +4428,11 @@
         WindowManager.setStatus('🌟 贴纸已清除');
       });
 
+      // 供外部检查是否有选中贴纸
+      function hasSelection() { return selectedEmoji !== null; }
+      // 供外部检查是否在拖拽
+      function isDragging() { return draggingIdx >= 0; }
+
       // Hook: 贴纸渲染挂钩预览更新
       var origUpdatePreview = TemplateEngine.updatePreview;
       TemplateEngine.updatePreview = function() {
@@ -4440,7 +4442,8 @@
 
       return {
         renderStickersOnComposite: renderStickersOnComposite,
-        getStickers: function() { return stickers; }
+        getStickers: function() { return stickers; },
+        hasSelection: hasSelection, isDragging: isDragging
       };
     })();
 
@@ -4493,10 +4496,12 @@
         TemplateEngine.updatePreview();
       });
 
-      // 在预览区上绘画
+      // 在预览区上绘画（只在笔刷激活且无贴纸选中时）
       if (previewArea) {
         previewArea.addEventListener('mousedown', function(e) {
           if (!brushMode) return;
+          // 如果贴纸被选中，不绘画
+          if (typeof StickerEngine !== 'undefined' && StickerEngine.hasSelection && StickerEngine.hasSelection()) return;
           isDrawing = true;
           var rect = previewArea.getBoundingClientRect();
           currentStroke = {
