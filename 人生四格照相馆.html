@@ -4017,8 +4017,8 @@
 
       // ===== 事件绑定 =====
 
-      // 滤镜按钮点击
-      var allFilterBtns = document.querySelectorAll('.filter-btn');
+      // 滤镜按钮点击（只选滤镜区的按钮，排除美颜/模板特效）
+      var allFilterBtns = document.querySelectorAll('#filter-group-xp .filter-btn, #filter-group-y2k .filter-btn, #filter-group-fresh .filter-btn, #filter-group-fx .filter-btn');
       allFilterBtns.forEach(function(btn) {
         btn.addEventListener('click', function() {
           // 同组内移除选中状态
