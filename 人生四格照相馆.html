@@ -3277,9 +3277,19 @@
         offCanvas.height = size.h;
         var offCtx = offCanvas.getContext('2d');
 
-        // 背景色（边框颜色 → 填充间隙和边距）
-        // 特殊边框处理
-        if (currentBorder === 'silver') {
+        // 拍立得模板使用自带配色（覆盖边框选择）
+        if (currentTemplate === 'polaroid') {
+          offCtx.fillStyle = '#FAFAFA'; offCtx.fillRect(0, 0, size.w, size.h);
+        } else if (currentTemplate === 'polaroid-brown') {
+          offCtx.fillStyle = '#E8DCC8'; offCtx.fillRect(0, 0, size.w, size.h);
+        } else if (currentTemplate === 'polaroid-rainbow') {
+          var pg = offCtx.createLinearGradient(0, 0, size.w, size.h);
+          pg.addColorStop(0, '#A855F7'); pg.addColorStop(0.5, '#EC4899'); pg.addColorStop(1, '#2DD4BF');
+          offCtx.fillStyle = pg; offCtx.fillRect(0, 0, size.w, size.h);
+        } else if (currentTemplate === 'polaroid-mini') {
+          offCtx.fillStyle = '#FFFFFF'; offCtx.fillRect(0, 0, size.w, size.h);
+        // 普通模板使用边框选择
+        } else if (currentBorder === 'silver') {
           var grad = offCtx.createLinearGradient(0, 0, size.w, size.h);
           grad.addColorStop(0, '#C0C0C0'); grad.addColorStop(0.3, '#E8E8E8'); grad.addColorStop(0.6, '#A0A0A0'); grad.addColorStop(1, '#D0D0D0');
           offCtx.fillStyle = grad;
