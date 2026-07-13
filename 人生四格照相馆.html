@@ -1123,6 +1123,14 @@
       <canvas class="icon-img icon-camera-canvas" width="48" height="48"></canvas>
       <div class="icon-label">photo<br>booth</div>
     </div>
+    <div class="desktop-icon" id="icon-minesweeper" title="扫雷">
+      <div class="icon-img">💣</div>
+      <div class="icon-label">扫雷</div>
+    </div>
+    <div class="desktop-icon" id="icon-solitaire" title="纸牌">
+      <div class="icon-img">🃏</div>
+      <div class="icon-label">纸牌</div>
+    </div>
     <div class="desktop-icon" id="icon-my-pc" title="我的电脑">
       <div class="icon-img">💻</div>
       <div class="icon-label">我的电脑</div>
@@ -4295,7 +4303,9 @@
         return emoji && emoji.length > 2; // 如 "💜LOVE"
       }
       function getArtText(emoji) {
-        return emoji.replace(/[^\w一-鿿]/g, '').replace(/^./, ''); // 去掉首个 emoji
+        // 艺术字格式：💜LOVE → 从第一个 ASCII 字母开始提取
+        var m = emoji.match(/[A-Za-z0-9]/);
+        return m ? emoji.slice(m.index) : emoji;
       }
 
       // 贴纸按钮点击
