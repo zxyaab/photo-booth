@@ -3401,7 +3401,13 @@
         // 防抖 100ms
         if (debounceTimer) clearTimeout(debounceTimer);
         debounceTimer = setTimeout(function() {
-          var compositeCanvas = getCompositeCanvas();
+          var compositeCanvas = composite();
+          // 显式走完整管线（滤镜→修图→美颜→贴纸→笔刷）
+          compositeCanvas = FilterEngine.applyFilter(compositeCanvas);
+          compositeCanvas = EditEngine.applyEdits(compositeCanvas);
+          compositeCanvas = BeautyEngine.applyBeauty(compositeCanvas);
+          compositeCanvas = StickerEngine.renderStickersOnComposite(compositeCanvas);
+          compositeCanvas = BrushEngine.renderBrushOnComposite(compositeCanvas);
           // 缩放到预览区
           var previewW = previewArea.clientWidth - 20;
           var previewH = previewArea.clientHeight - 20;
